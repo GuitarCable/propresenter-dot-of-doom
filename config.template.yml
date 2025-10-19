@@ -1,0 +1,22 @@
+oAuth:
+  clientId:
+  clientSecret:
+bandPosition: <allBandPositions KEY>
+serviceType: <allServiceTypes KEY>
+backupNumber: (###) ###-####
+debug: true
+logLocation: <logs/text_sender.log>
+allBandPositions:
+ - - KEY_1
+   - value 1
+ - - KEY_2
+   - value 2
+ - - KEY_3
+   - value 3
+allServiceTypes:
+ - - KEY_1
+   - value 1
+ - - KEY_2
+   - value 2
+ - - KEY_3
+   - value 3
