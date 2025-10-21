@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'bundler/setup'
 require 'date'
 require 'logger'
 require 'pco_api'
@@ -123,3 +124,6 @@ class TextSender
 		@logger.close
 	end
 end
+
+text_sender = TextSender.new()
+text_sender.run
