@@ -1,34 +1,28 @@
 require 'yaml'
 
 class Config
-    attr_reader :target_service_id
-    attr_reader :position
+    attr_reader :service_type
+    attr_reader :band_position
+    attr_reader :send_all
     attr_reader :backup_number
     attr_reader :client_id
     attr_reader :client_secret
     attr_reader :debug
-    attr_reader :logLocation
-
-
-    def get_value_from_key(key, key_value_pairs)
-        for key_value in key_value_pairs
-  
-            if key.casecmp(key_value[0]) == 0
-              return key_value[1]
-            end
-        end
-        return ""
-    end
+    attr_reader :log_location
+    attr_reader :message
+    attr_reader :team_names
 
     def initialize()
         @config = YAML.load_file('./config.yml')
 
-        @target_service_id = get_value_from_key(@config['serviceType'], @config['allServiceTypes'])
-        @position          = get_value_from_key(@config['bandPosition'], @config['allBandPositions'])
-        @backup_number     = @config['backupNumber']
         @client_id         = @config['oAuth']['clientId']
         @client_secret     = @config['oAuth']['clientSecret']
+        @service_type      = @config['serviceType']
+        @team_names        = @config['teamNames']
+        @band_position     = @config['bandPosition']
+        @send_all          = @config['sendAll']
+        @backup_number     = @config['backupNumber']
+        @message           = @config['message']
         @debug             = @config['debug']
-        @logLocation       = @config['logLocation']
     end
 end

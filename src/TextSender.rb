@@ -11,10 +11,24 @@ require_relative 'util/LogFileGenerator.rb'
 require_relative 'util/Util.rb'
 
 class TextSender
+	def initialize_api()
+		begin
+			@logger.info("Initializing API")
+			api = PCO::API.new(basic_auth_token: @config.client_id, basic_auth_secret: @config.client_secret)
+			@logger.info("Successfully initialized API")
+			return api
+		rescue StandardError => err
+			@logger.error(err)
+			@logger.error("Failed to initialize API")
+			return nil
+		end
+	end
+
 	def initialize()
 		@config = Config.new()
-		LogFileGenerator.create_file_with_dirs(@config.logLocation)
-		logFile = File.open(@config.logLocation, 'a')
+		log_location = "logs/text_sender.log"
+		LogFileGenerator.create_file_with_dirs(log_location)
+		logFile = File.open(log_location, 'a')
 		@logger = Logger.new(logFile, 'daily')
 		if @config.debug != false
 			@logger.level = Logger::DEBUG
@@ -22,6 +36,10 @@ class TextSender
 		else
 			@logger.level = Logger::INFO
 		end
+		@api = initialize_api()
+
+		@success = true
+		
 		@logger.info("TextSender initialized.")
 	end
 
@@ -34,43 +52,73 @@ class TextSender
 		raise("No primary phone number found")
 	end
 
-	def run()
-		@logger.info("Running TextSender")
-		api = nil
+	def get_phone_numbers()
 		begin
-			@logger.info("Initializing API")
-			api = PCO::API.new(basic_auth_token: @config.client_id, basic_auth_secret: @config.client_secret)
-			@logger.info("Successfully initialized API")
-		rescue StandardError => err
-			@logger.error("Failed to initialize API")
-			@logger.error(err)
-		end
-		phone_number = nil
-		begin
-			plans = api.services.v2.service_types[@config.target_service_id].plans.get(order: '-created_at')
+			service_type_api_response = @api.services.v2.service_types.get('where[name]': @config.service_type)
+			service_type_id = service_type_api_response['data'][0]['id']
+			
+			plans = @api.services.v2.service_types[service_type_id].plans.get(order: '-created_at')
 
 			current_plan = Util.get_current_plan(plans)
 
-			team = api.services.v2.service_types[@config.target_service_id].plans[current_plan['id']].team_members.get(per_page: '50')
+			team = @api.services.v2.service_types[service_type_id].plans[current_plan['id']].team_members.get(per_page: '50')
 
-			target_player = Util.get_player(team, @config.position)
+			players = []
 
-			keys_id = target_player['relationships']['person']['data']['id']
-			phone_number_api_response = api.people.v2.people[keys_id].phone_numbers.get()
-			phone_number = get_primary_phone_number(phone_number_api_response)
+			if @config.send_all == true
+				for team_name in @config.team_names
+					teams_api_response = @api.services.v2.teams.get('where[name]': team_name)
+					team_id = nil
+					for temp_team in teams_api_response['data']
+						if temp_team['relationships']['service_type']['data']['id'] == service_type_id
+							team_id = temp_team['id']
+							break
+						end
+					end
+					for member in team['data']
+						if Util.is_confirmed(member) && Util.is_in_team(member, team_id)
+							players.push(member)
+						end
+					end
+				end
+				players = players.uniq
+			else
+				players.push(Util.get_player(team, @config.band_position))
+			end
+
+			phone_numbers = []
+			for player in players
+				player_id = player['relationships']['person']['data']['id']
+				phone_number_api_response = @api.people.v2.people[player_id].phone_numbers.get()
+				phone_numbers.push(get_primary_phone_number(phone_number_api_response))
+			end
+			return phone_numbers
 		rescue StandardError => err
+			@logger.error("\n#{err}")
 			@logger.error("Failed to look up phone number. Defaulting to backup phone number.")
-			@logger.error(err)
-			phone_number = @config.backup_number
+			@success = false
+			return [@config.backup_number]
+		end
+	end
+
+	def run()
+		@logger.info("Running TextSender")
+		
+		phone_numbers = get_phone_numbers()
+		message = nil
+		if @success
+			message = @config.message
+		else
+			message = "Something failed when looking up phone numbers. Sending this to the backup number."
 		end
 		begin
-			@logger.info("Sending text to #{phone_number}")
-			text_script = TextScript.new()
-			text_script.send(phone_number, @config.debug)
-			@logger.info("Text successfully sent")
+			for phone_number in phone_numbers
+				text_script = TextScript.new(@logger, @config.debug)
+				text_script.send(phone_number, message)
+			end
 		rescue StandardError => err
+			@logger.fatal("\n#{err}")
 			@logger.fatal("Failed to send message. Shutting down")
-			@logger.fatal(err)
 		end
 		@logger.close
 	end

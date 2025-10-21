@@ -1,7 +1,23 @@
 module Util
+    def self.is_confirmed(person)
+        if (person['attributes']['status'] == 'C' || person['attributes']['status'] == 'Confirmed')
+			return true
+        else
+            return false
+	    end
+    end
+
+    def self.is_in_team(person, team_id)
+        if (person['relationships']['team']['data']['id'] == team_id)
+            return true
+        else
+            return false
+        end
+    end
+
     def self.get_player(team, position)
 	    for person in team['data'] do
-		    if person['attributes']['team_position_name'].casecmp(position) == 0 && (person['attributes']['status'] == 'C' || person['attributes']['status'] == 'Confirmed')
+		    if person['attributes']['team_position_name'].casecmp(position) == 0 && is_confirmed(person)
 			    return person
 		    end
 	    end
