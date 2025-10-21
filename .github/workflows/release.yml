@@ -53,6 +53,9 @@ jobs:
           prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.CI_CD }}
+      - name: Debug upload_url
+        run: |
+          echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
       - name: Zip macOS app
         run: zip -r DotOfDoom-macOS.zip build/DotOfDoom.app
       - name: Upload macOS artifact to release
