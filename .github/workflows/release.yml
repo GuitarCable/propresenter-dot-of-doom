@@ -42,11 +42,14 @@ jobs:
           next_tag="v$major.$minor.$next_patch"
           echo "Next tag: $next_tag"
           echo "next_tag=$next_tag" >> $GITHUB_OUTPUT
+      - name: Zip macOS app
+        run: zip -r DotOfDoom-macOS.zip build/DotOfDoom.app
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.get_tag.outputs.next_tag }}
           name: Release ${{ steps.get_tag.outputs.next_tag }}
+          files: DotOfDoom-macOS.zip
           body: |
             Auto-generated release from macOS runner
           draft: true
@@ -56,15 +59,4 @@ jobs:
       - name: Debug upload_url
         run: |
           echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
-      - name: Zip macOS app
-        run: zip -r DotOfDoom-macOS.zip build/DotOfDoom.app
-      - name: Upload macOS artifact to release
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: DotOfDoom-macOS.zip
-          asset_name: DotOfDoom-macOS.zip
-          asset_content_type: application/zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.CI_CD }}
           
