@@ -26,7 +26,8 @@ jobs:
         run: |
           # Replace with your actual build/packaging commands
           mkdir -p build/DotOfDoom.app/Contents/MacOS
-          cp TextSender.rb build/DotOfDoom.app/Contents/MacOS/
+          ls
+          cp src/TextSender.rb build/DotOfDoom.app/Contents/MacOS/
           echo '#!/bin/bash' > build/DotOfDoom.app/Contents/MacOS/runner
           echo 'ruby "$0/../src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
           chmod +x build/DotOfDoom.app/Contents/MacOS/runner
