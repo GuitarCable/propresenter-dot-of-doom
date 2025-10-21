@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -28,18 +28,22 @@ jobs:
         run: bundle install
       - name: Build macOS Application (Example with a custom script)
         run: |
-          mkdir -p build/DotOfDoom.app/Contents/MacOS
-          mkdir -p build/DotOfDoom.app/Contents/MacOS/ruby
-          cp -r /Users/runner/hostedtoolcache/Ruby/3.4.7/x64/bin build/DotOfDoom.app/Contents/MacOS/ruby
-          mkdir -p build/DotOfDoom.app/Contents/MacOS/src
-          cp -r src/* build/DotOfDoom.app/Contents/MacOS/src/
-          cp config.template.yml build/DotOfDoom.app/Contents/MacOS/
-          # cp -r vendor/* build/DotOfDoom.app/Contents/MacOS/
-          echo '#!/bin/bash' > build/DotOfDoom.app/Contents/MacOS/runner
-          echo 'export PATH="./ruby:$PATH"' >> build/DotOfDoom.app/Contents/MacOS/runner
-          echo 'ruby "$0/./src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
-          chmod +x build/DotOfDoom.app/Contents/MacOS/runner
-          # Add Info.plist and other necessary files for a proper .app bundle
+          # mkdir -p build/DotOfDoom.app/Contents/MacOS
+          # mkdir -p build/DotOfDoom.app/Contents/MacOS/ruby
+          # cp -r /Users/runner/hostedtoolcache/Ruby/3.4.7/x64/bin build/DotOfDoom.app/Contents/MacOS/ruby
+          # mkdir -p build/DotOfDoom.app/Contents/MacOS/src
+          # cp -r src/* build/DotOfDoom.app/Contents/MacOS/src/
+          # cp config.template.yml build/DotOfDoom.app/Contents/MacOS/
+          # # cp -r vendor/* build/DotOfDoom.app/Contents/MacOS/
+          # echo '#!/bin/bash' > build/DotOfDoom.app/Contents/MacOS/runner
+          # echo 'export PATH="./ruby:$PATH"' >> build/DotOfDoom.app/Contents/MacOS/runner
+          # echo 'ruby "$0/./src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
+          # chmod +x build/DotOfDoom.app/Contents/MacOS/runner
+          # # Add Info.plist and other necessary files for a proper .app bundle
+          wget https://github.com/pmq20/ruby-packer/releases/download/v0.6.0/rubyc-x86_64-linux -O rubyc
+          chmod +x rubyc
+          ./rubyc --arch=x86_64-macos src/TextSender.rb
+          ls
       - name: Set up Git
         run: |
           git fetch --tags
@@ -54,15 +58,20 @@ jobs:
           next_tag="v$major.$minor.$next_patch"
           echo "Next tag: $next_tag"
           echo "next_tag=$next_tag" >> $GITHUB_OUTPUT
-      - name: Zip macOS app
-        run: zip -r DotOfDoom-macOS.zip build/DotOfDoom.app
+      # - name: Zip macOS app
+      #   run: zip -r DotOfDoom-macOS.zip build/DotOfDoom.app
+      - name: Zip cruby exec
+        run: |
+          mkdir DotOfDoom-macOS-x86_64
+          cp TextSender config.template.yml DotOfDoom-macOS-x86_64/
+          zip -r DotOfDoom-macOS-x86_64.zip DotOfDoom-macOS-x86_64
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.get_tag.outputs.next_tag }}
           name: Release ${{ steps.get_tag.outputs.next_tag }}
           files: |
-                 DotOfDoom-macOS.zip
+                 DotOfDoom-macOS-x86_64.zip
           body: |
             Auto-generated release from macOS runner
         env:
