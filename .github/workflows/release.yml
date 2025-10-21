@@ -13,10 +13,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Create ZIP of source code
-        run: |
-          mkdir -p release
-          zip -r release/source-code.zip . -x "*.git*" "*.github*"
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -55,7 +51,6 @@ jobs:
           name: Release ${{ steps.get_tag.outputs.next_tag }}
           files: |
                  DotOfDoom-macOS.zip
-                 release/source-code.zip
           body: |
             Auto-generated release from macOS runner
         env:
