@@ -53,18 +53,15 @@ jobs:
           prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.CI_CD }}
-      - name: Upload macOS Application
-        uses: actions/upload-artifact@v4
-        with:
-          name: DotOfDoom-macOS
-          path: build/DotOfDoom.app
-      - name: upload macOS artifact
+      - name: Zip macOS app
+        run: zip -r DotOfDoom-macOS.zip build/DotOfDoom.app
+      - name: Upload macOS artifact to release
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/DotOfDoom.app
-          asset_name: DotOfDoom.app
-          asset_content_type: application/app
+          asset_path: DotOfDoom-macOS.zip
+          asset_name: DotOfDoom-macOS.zip
+          asset_content_type: application/zip
         env:
-          GITHUB_TOKEN: ${{ secrets.CI_CD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
