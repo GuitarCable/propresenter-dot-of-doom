@@ -17,15 +17,15 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4.7' # Or use .ruby-version
-      # - name: Cache Ruby gems
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: vendor/bundle
-      #     key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-gems-
+      - name: Cache Ruby gems
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
       - name: Install dependencies
-        run: bundle install
+        run: bundle install --path vendor/bundle
       - name: Build macOS Application (Example with a custom script)
         run: |
           # mkdir -p build/DotOfDoom.app/Contents/MacOS
@@ -40,10 +40,7 @@ jobs:
           # echo 'ruby "$0/./src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
           # chmod +x build/DotOfDoom.app/Contents/MacOS/runner
           # # Add Info.plist and other necessary files for a proper .app bundle
-          wget https://github.com/pmq20/ruby-packer/releases/download/darwin-x64/rubyc -O rubyc
-          chmod +x rubyc
-          ./rubyc --arch=x86_64-macos src/TextSender.rb
-          ls
+          zip -r dot-of-doom.zip run.rb src vendor Gemfile
       - name: Set up Git
         run: |
           git fetch --tags
@@ -60,18 +57,18 @@ jobs:
           echo "next_tag=$next_tag" >> $GITHUB_OUTPUT
       # - name: Zip macOS app
       #   run: zip -r DotOfDoom-macOS.zip build/DotOfDoom.app
-      - name: Zip cruby exec
-        run: |
-          mkdir DotOfDoom-macOS-x86_64
-          cp TextSender config.template.yml DotOfDoom-macOS-x86_64/
-          zip -r DotOfDoom-macOS-x86_64.zip DotOfDoom-macOS-x86_64
+      # - name: Zip cruby exec
+      #   run: |
+      #     mkdir DotOfDoom-macOS-x86_64
+      #     cp TextSender config.template.yml DotOfDoom-macOS-x86_64/
+      #     zip -r DotOfDoom-macOS-x86_64.zip DotOfDoom-macOS-x86_64
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.get_tag.outputs.next_tag }}
           name: Release ${{ steps.get_tag.outputs.next_tag }}
           files: |
-                 DotOfDoom-macOS-x86_64.zip
+                 dot-of-doom.zip
           body: |
             Auto-generated release from macOS runner
         env:
