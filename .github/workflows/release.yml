@@ -40,7 +40,7 @@ jobs:
           # echo 'ruby "$0/./src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
           # chmod +x build/DotOfDoom.app/Contents/MacOS/runner
           # # Add Info.plist and other necessary files for a proper .app bundle
-          wget https://github.com/pmq20/ruby-packer/releases/download/v0.6.0/rubyc-x86_64-linux -O rubyc
+          wget https://github.com/pmq20/ruby-packer/releases/download/darwin-x64/rubyc -O rubyc
           chmod +x rubyc
           ./rubyc --arch=x86_64-macos src/TextSender.rb
           ls
