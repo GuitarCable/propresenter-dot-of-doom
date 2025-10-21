@@ -13,18 +13,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1' # Or use .ruby-version
-
       - name: Install dependencies
         run: bundle install
-
       - name: Build macOS Application (Example with a custom script)
         run: |
-          # Replace with your actual build/packaging commands
           mkdir -p build/DotOfDoom.app/Contents/MacOS
           ls
           cp src/TextSender.rb build/DotOfDoom.app/Contents/MacOS/
@@ -32,9 +28,12 @@ jobs:
           echo 'ruby "$0/../src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
           chmod +x build/DotOfDoom.app/Contents/MacOS/runner
           # Add Info.plist and other necessary files for a proper .app bundle
-
       - name: Upload macOS Application
         uses: actions/upload-artifact@v4
         with:
           name: DotOfDoom-macOS
           path: build/DotOfDoom.app
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/DotOfDoom.app
