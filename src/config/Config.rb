@@ -13,7 +13,7 @@ class Config
     attr_reader :team_names
 
     def initialize()
-        @config = YAML.load_file('./config.yml')
+        @config = YAML.load_file('../config.yml')
 
         @client_id         = @config['oAuth']['clientId']
         @client_secret     = @config['oAuth']['clientSecret']
