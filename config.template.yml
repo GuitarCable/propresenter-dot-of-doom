@@ -1,8 +1,8 @@
 oAuth:
   clientId:
   clientSecret:
-serviceType: <allServiceTypes KEY>
-bandPosition: <allBandPositions KEY>
+serviceType: <service type name here>
+bandPosition: <target band position if sendAll is disabled>
 teamNames:
  - team 1
  - team 2
