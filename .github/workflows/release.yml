@@ -9,14 +9,14 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.4' # Or use .ruby-version
+          ruby-version: '3.4.7' # Or use .ruby-version
       - name: Cache Ruby gems
         uses: actions/cache@v3
         with:
@@ -29,11 +29,14 @@ jobs:
       - name: Build macOS Application (Example with a custom script)
         run: |
           mkdir -p build/DotOfDoom.app/Contents/MacOS
+          mkdir -p build/DotOfDoom.app/Contents/MacOS/ruby
+          cp -r /opt/hostedtoolcache/Ruby/3.4.7/x64/bin build/DotOfDoom.app/Contents/MacOS/ruby
           mkdir -p build/DotOfDoom.app/Contents/MacOS/src
           cp -r src/* build/DotOfDoom.app/Contents/MacOS/src/
           cp config.template.yml build/DotOfDoom.app/Contents/MacOS/
           cp -r vendor/* build/DotOfDoom.app/Contents/MacOS/
           echo '#!/bin/bash' > build/DotOfDoom.app/Contents/MacOS/runner
+          echo 'export PATH="./ruby:$PATH"' >> build/DotOfDoom.app/Contents/MacOS/runner
           echo 'ruby "$0/./src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
           chmod +x build/DotOfDoom.app/Contents/MacOS/runner
           # Add Info.plist and other necessary files for a proper .app bundle
