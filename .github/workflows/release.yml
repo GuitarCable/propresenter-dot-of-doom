@@ -30,9 +30,9 @@ jobs:
         run: |
           mkdir -p build/DotOfDoom.app/Contents/MacOS
           mkdir -p build/DotOfDoom.app/Contents/MacOS/ruby
-          ls /opt/hostedtoolcache/Ruby
-          ls /opt/hostedtoolcache/Ruby/3.4.7
-          cp -r /opt/hostedtoolcache/Ruby/3.4.7/arm64/bin build/DotOfDoom.app/Contents/MacOS/ruby
+          ls /Users/runner/hostedtoolcache/Ruby/Ruby
+          ls /Users/runner/hostedtoolcache/Ruby/Ruby/3.4.7
+          cp -r /Users/runner/hostedtoolcache/Ruby/Ruby/3.4.7/arm64/bin build/DotOfDoom.app/Contents/MacOS/ruby
           mkdir -p build/DotOfDoom.app/Contents/MacOS/src
           cp -r src/* build/DotOfDoom.app/Contents/MacOS/src/
           cp config.template.yml build/DotOfDoom.app/Contents/MacOS/
