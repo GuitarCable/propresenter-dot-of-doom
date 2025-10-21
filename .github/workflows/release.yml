@@ -40,7 +40,7 @@ jobs:
           # echo 'ruby "$0/./src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
           # chmod +x build/DotOfDoom.app/Contents/MacOS/runner
           # # Add Info.plist and other necessary files for a proper .app bundle
-          zip -r dot-of-doom.zip run.rb src vendor Gemfile
+          zip -r dot-of-doom.zip run.rb src vendor Gemfile config.template.yml
       - name: Set up Git
         run: |
           git fetch --tags
