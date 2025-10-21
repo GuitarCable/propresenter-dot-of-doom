@@ -8,4 +8,6 @@ teamNames:
  - team 2
 sendAll: false
 backupNumber: (###) ###-####
+message: The dot is up.
+messageType: iMessage
 debug: true

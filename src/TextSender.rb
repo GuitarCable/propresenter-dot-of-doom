@@ -111,15 +111,15 @@ class TextSender
 		else
 			message = "Something failed when looking up phone numbers. Sending this to the backup number."
 		end
-		begin
-			for phone_number in phone_numbers
+		for phone_number in phone_numbers
+			begin
 				text_script = TextScript.new(@logger, @config.debug)
 				text_script.send(phone_number, message)
+			rescue StandardError => err
+				@logger.error("\n#{err}")
+				@logger.error("Failed to send message to #{phone_number}. Check to see if this user has iMessage")
 			end
-		rescue StandardError => err
-			@logger.fatal("\n#{err}")
-			@logger.fatal("Failed to send message. Shutting down")
-		end
+		end		
 		@logger.close
 	end
 end
