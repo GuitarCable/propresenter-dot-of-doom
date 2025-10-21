@@ -41,13 +41,6 @@ jobs:
           next_tag="v$major.$minor.$next_patch"
           echo "Next tag: $next_tag"
           echo "next_tag=$next_tag" >> $GITHUB_OUTPUT
-      # - name: Zip macOS app
-      #   run: zip -r DotOfDoom-macOS.zip build/DotOfDoom.app
-      # - name: Zip cruby exec
-      #   run: |
-      #     mkdir DotOfDoom-macOS-x86_64
-      #     cp TextSender config.template.yml DotOfDoom-macOS-x86_64/
-      #     zip -r DotOfDoom-macOS-x86_64.zip DotOfDoom-macOS-x86_64
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
