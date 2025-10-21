@@ -28,13 +28,27 @@ jobs:
           echo 'ruby "$0/../src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
           chmod +x build/DotOfDoom.app/Contents/MacOS/runner
           # Add Info.plist and other necessary files for a proper .app bundle
-      - name: Create Release
+      - name: Set up Git
+        run: |
+          git fetch --tags
+      - name: Get latest tag and compute next version
+        id: get_tag
+        run: |
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0")
+          echo "Latest tag: $latest_tag"
+          version=${latest_tag#v}
+          IFS='.' read -r major minor patch <<< "$version"
+          next_patch=$((patch + 1))
+          next_tag="v$major.$minor.$next_patch"
+          echo "Next tag: $next_tag"
+          echo "next_tag=$next_tag" >> $GITHUB_OUTPUT
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v1.0.0
-          name: Release v1.0.0
+          tag_name: ${{ steps.get_tag.outputs.next_tag }}
+          name: Release ${{ steps.get_tag.outputs.next_tag }}
           body: |
-            Please work
+            Auto-generated release from macOS runner
           draft: true
           prerelease: true
         env:
