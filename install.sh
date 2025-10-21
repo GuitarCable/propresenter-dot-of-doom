@@ -4,6 +4,8 @@ cd "$(dirname "$0")"
 
 HOME_DIR="$(pwd)"
 
+ruby_version=$(ruby -v | awk '{print $2}' | cut -d. -f1,2)
+
 DIRECTORY=""
 
 if [ $# -ge 1 ]; then
@@ -14,7 +16,7 @@ else
 fi
 
 if [ -d "$DIRECTORY" ] && [ "$(find "$DIRECTORY" -mindepth 1 -print -quit)" ]; then
-    read -s -p "This directory is not empty. Are you sure that you want to overwrite this dir's contents? (y/n)" input
+    read -s -p "$DIRECTORY is not empty. Are you sure that you want to overwrite this dir's contents? (y/n)" input
     if [[ "$input" =~ ^[Yy]$ ]]; then
         cd "$DIRECTORY"
         find . ! -name 'config.yml' -type f -exec rm -f {} +
@@ -34,9 +36,9 @@ fi
 
 cd "$HOME_DIR"
 
-if [ ! -f build/dot-of-doom.zip ]; then
+if [ ! -f "build/dot-of-doom-$ruby_version.zip" ]; then
   echo "Zip file not found."
   exit 1
 fi
 
-unzip build/dot-of-doom.zip -d "$DIRECTORY" > /dev/null
+unzip "build/dot-of-doom-$ruby_version.zip" -d "$DIRECTORY" > /dev/null
