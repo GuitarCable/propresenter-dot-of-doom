@@ -22,7 +22,8 @@ jobs:
       - name: Build macOS Application (Example with a custom script)
         run: |
           mkdir -p build/DotOfDoom.app/Contents/MacOS
-          cp -r source-folder/* build/DotOfDoom.app/Contents/MacOS/
+          mkdir -p build/DotOfDoom.app/Contents/MacOS/src
+          cp -r src/* build/DotOfDoom.app/Contents/MacOS/src/
           cp config.template.yml build/DotOfDoom.app/Contents/MacOS/
           echo '#!/bin/bash' > build/DotOfDoom.app/Contents/MacOS/runner
           echo 'ruby "$0/../src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
