@@ -2,7 +2,7 @@ name: Ruby
 
 on:
   push:
-    tags: "v*"
+    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1' # Or use .ruby-version
+          ruby-version: '3.4' # Or use .ruby-version
       - name: Install dependencies
         run: bundle install
       - name: Build macOS Application (Example with a custom script)
@@ -28,12 +28,25 @@ jobs:
           echo 'ruby "$0/../src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
           chmod +x build/DotOfDoom.app/Contents/MacOS/runner
           # Add Info.plist and other necessary files for a proper .app bundle
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: v1.0.0
+          release_name: Release v1.0.0
+          body: |
+            Please work
+          draft: true
+          prerelease: true
       - name: Upload macOS Application
         uses: actions/upload-artifact@v4
         with:
           name: DotOfDoom-macOS
           path: build/DotOfDoom.app
-      - name: Release
-        uses: softprops/action-gh-release@v2
+      - name: upload macOS artifact
+        uses: actions/upload-release-asset@v1
         with:
-          files: build/DotOfDoom.app
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/DotOfDoom.app
+          asset_name: DotOfDoom.app
+          asset_content_type: application/app
