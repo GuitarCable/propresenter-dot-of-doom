@@ -1,9 +1,8 @@
-name: Release
+name: Upload Release Artifact
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [created]
 
 permissions:
   contents: write
@@ -28,28 +27,14 @@ jobs:
       - name: Build
         run: |
           ./build.sh
-      - name: Set up Git
-        run: |
-          git fetch --tags
-      - name: Get latest tag and compute next version
-        id: get_tag
-        run: |
-          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0")
-          echo "Latest tag: $latest_tag"
-          version=${latest_tag#v}
-          IFS='.' read -r major minor patch <<< "$version"
-          next_patch=$((patch + 1))
-          next_tag="v$major.$minor.$next_patch"
-          echo "Next tag: $next_tag"
-          echo "next_tag=$next_tag" >> $GITHUB_OUTPUT
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.get_tag.outputs.next_tag }}
-          name: Release ${{ steps.get_tag.outputs.next_tag }}
+          tag_name: ${{ github.event.release.tag_name }}
+          name: Release ${{ github.event.release.tag_name }}
           files: |
                  build/dot-of-doom.zip
           body: |
-            Auto-generated release from ubuntu runner
+            Auto-uploaded artifact for draft release
         env:
           GITHUB_TOKEN: ${{ secrets.CI_CD }}          
