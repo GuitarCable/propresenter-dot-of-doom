@@ -123,6 +123,3 @@ class TextSender
 		@logger.close
 	end
 end
-
-text_sender = TextSender.new()
-text_sender.run

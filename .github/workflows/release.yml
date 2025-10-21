@@ -24,23 +24,9 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-
-      - name: Install dependencies
-        run: bundle install --path vendor/bundle
-      - name: Build macOS Application (Example with a custom script)
+      - name: Build
         run: |
-          # mkdir -p build/DotOfDoom.app/Contents/MacOS
-          # mkdir -p build/DotOfDoom.app/Contents/MacOS/ruby
-          # cp -r /Users/runner/hostedtoolcache/Ruby/3.4.7/x64/bin build/DotOfDoom.app/Contents/MacOS/ruby
-          # mkdir -p build/DotOfDoom.app/Contents/MacOS/src
-          # cp -r src/* build/DotOfDoom.app/Contents/MacOS/src/
-          # cp config.template.yml build/DotOfDoom.app/Contents/MacOS/
-          # # cp -r vendor/* build/DotOfDoom.app/Contents/MacOS/
-          # echo '#!/bin/bash' > build/DotOfDoom.app/Contents/MacOS/runner
-          # echo 'export PATH="./ruby:$PATH"' >> build/DotOfDoom.app/Contents/MacOS/runner
-          # echo 'ruby "$0/./src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
-          # chmod +x build/DotOfDoom.app/Contents/MacOS/runner
-          # # Add Info.plist and other necessary files for a proper .app bundle
-          zip -r dot-of-doom.zip run.rb src vendor Gemfile config.template.yml README.md
+          ./build.sh
       - name: Set up Git
         run: |
           git fetch --tags
@@ -68,7 +54,7 @@ jobs:
           tag_name: ${{ steps.get_tag.outputs.next_tag }}
           name: Release ${{ steps.get_tag.outputs.next_tag }}
           files: |
-                 dot-of-doom.zip
+                 build/dot-of-doom.zip
           body: |
             Auto-generated release from ubuntu runner
         env:

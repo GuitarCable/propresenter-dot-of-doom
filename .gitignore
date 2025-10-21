@@ -1,7 +1,10 @@
 .DS_Store
 flutter-test
 
+.bundle
+vendor
+Gemfile.lock
+install
 config.yml
-script-custom.sh
 logs
-logs/*
+build
