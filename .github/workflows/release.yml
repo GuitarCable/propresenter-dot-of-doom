@@ -22,8 +22,8 @@ jobs:
       - name: Build macOS Application (Example with a custom script)
         run: |
           mkdir -p build/DotOfDoom.app/Contents/MacOS
-          ls
-          cp src/TextSender.rb build/DotOfDoom.app/Contents/MacOS/
+          cp src build/DotOfDoom.app/Contents/MacOS/
+          cp config.template.yml build/DotOfDoom.app/Contents/MacOS/
           echo '#!/bin/bash' > build/DotOfDoom.app/Contents/MacOS/runner
           echo 'ruby "$0/../src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
           chmod +x build/DotOfDoom.app/Contents/MacOS/runner
@@ -54,8 +54,4 @@ jobs:
           body: |
             Auto-generated release from macOS runner
         env:
-          GITHUB_TOKEN: ${{ secrets.CI_CD }}
-      - name: Debug upload_url
-        run: |
-          echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
-          
+          GITHUB_TOKEN: ${{ secrets.CI_CD }}          
