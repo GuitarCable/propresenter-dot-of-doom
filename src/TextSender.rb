@@ -95,7 +95,7 @@ class TextSender
 			return phone_numbers
 		rescue StandardError => err
 			@logger.error("\n#{err}")
-			@logger.error("Failed to look up phone number. Defaulting to backup phone number.")
+			@logger.error("Failed to look up phone number. Check the logs for reason of failure.")
 			@success = false
 			return [@config.backup_number]
 		end
