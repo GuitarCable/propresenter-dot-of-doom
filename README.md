@@ -10,7 +10,7 @@ The message is arbitrary.<br>
 If debug is true, a log will be generated and texts will not be sent.<br>
 If debug is false, texts will actually be sent.
 <h3>For retrieving a clientId and clientSecret</h3>
-Follow instructions at [API Instructions Link](https://developer.planning.center/docs/#/overview/authentication) for generating a Personal Access Token
+Follow instructions at https://developer.planning.center/docs/#/overview/authentication for generating a Personal Access Token
 <h2>To Run</h2>
 As long as you have a ruby installation, this application should run.<br>
 Simply navigate to the directory and type "ruby ./run.rb" in the terminal.
