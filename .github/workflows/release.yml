@@ -17,16 +17,24 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4' # Or use .ruby-version
+      - name: Cache Ruby gems
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
       - name: Install dependencies
-        run: bundle install
+        run: bundle install --path vendor/bundle
       - name: Build macOS Application (Example with a custom script)
         run: |
           mkdir -p build/DotOfDoom.app/Contents/MacOS
           mkdir -p build/DotOfDoom.app/Contents/MacOS/src
           cp -r src/* build/DotOfDoom.app/Contents/MacOS/src/
           cp config.template.yml build/DotOfDoom.app/Contents/MacOS/
+          cp -r vendor/* build/DotOfDoom.app/Contents/MacOS/
           echo '#!/bin/bash' > build/DotOfDoom.app/Contents/MacOS/runner
-          echo 'ruby "$0/../src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
+          echo 'ruby "$0/./src/TextSender.rb"' >> build/DotOfDoom.app/Contents/MacOS/runner
           chmod +x build/DotOfDoom.app/Contents/MacOS/runner
           # Add Info.plist and other necessary files for a proper .app bundle
       - name: Set up Git
