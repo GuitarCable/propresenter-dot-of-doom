@@ -32,13 +32,14 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          github_token: ${{ secrets.CI_CD }}
           tag_name: v1.0.0
           release_name: Release v1.0.0
           body: |
             Please work
           draft: true
           prerelease: true
+        env:
+          github_token: ${{ secrets.CI_CD }}
       - name: Upload macOS Application
         uses: actions/upload-artifact@v4
         with:
@@ -49,5 +50,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: build/DotOfDoom.app
+        env:
+          github_token: ${{ secrets.CI_CD }}
           asset_name: DotOfDoom.app
           asset_content_type: application/app
