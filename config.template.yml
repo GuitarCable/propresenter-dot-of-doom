@@ -7,7 +7,7 @@ teamNames:
  - team 1
  - team 2
 sendAll: false
-backupNumber: (###) ###-####
+backupNumber: "(###) ###-####"
 message: The dot is up.
 messageType: iMessage
 debug: true
