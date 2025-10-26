@@ -29,7 +29,8 @@ Future<Logger> getLogger() async {
   String loggingFilePath = './logs/dot_of_doom.txt';
   await setupLoggingPath(loggingFilePath);
   Logger.root.onRecord.listen((record) {
-    final message = '${record.time} | ${record.level.name} | ${record.loggerName} | ${record.message}';
+    final message =
+        '${record.time} | ${record.level.name} | ${record.loggerName} | ${record.message}';
     print(message);
     final logFile = File(loggingFilePath);
     logFile.writeAsStringSync('$message\n', mode: FileMode.append);
