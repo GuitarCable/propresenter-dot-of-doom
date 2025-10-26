@@ -3,4 +3,5 @@
 .dart_tool/
 
 logs
+tmp
 config.yml

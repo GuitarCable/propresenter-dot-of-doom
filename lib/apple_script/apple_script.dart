@@ -9,7 +9,8 @@ class AppleScript {
   AppleScript(this.logger, this.debug);
 
   void text(String phoneNumber, String message) async {
-    String appleScriptCode = '''
+    String appleScriptCode =
+        '''
       on run argv
 	      tell application "Messages"
 		      set targetBuddy to "$phoneNumber"
