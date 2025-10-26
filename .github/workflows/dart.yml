@@ -1,10 +1,8 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Dart
 
+env:
+  APP_NAME: dot-of-doom
+  MAIN_LOCATION: bin/dart.dart
 on:
   push:
     branches: [ "main" ]
@@ -15,7 +13,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [macos-latest, macos-15-intel]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -24,12 +22,14 @@ jobs:
           sdk: 'stable'
       - name: Install dependencies
         run: dart pub get
-      - name: Compile
-        run: dart compile exe bin/dart.dart -o dot-of-doom
+      - name: Compile and Zip
+        run: |
+            dart compile exe $MAIN_LOCATION -o $APP_NAME
+            zip dot-of-doom-${{ matrix.os }}.zip $APP_NAME config.template.yml
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}
-          path: dot-of-doom
+          path: dot-of-doom-${{ matrix.os }}.zip
       - name: Analyze project source
         run: dart analyze
         
