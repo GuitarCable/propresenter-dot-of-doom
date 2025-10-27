@@ -10,6 +10,8 @@ env:
 
 jobs:
   build:
+    permissions:
+      contents: write
     strategy:
       matrix:
         os: [macos-latest, macos-15-intel]
@@ -27,9 +29,10 @@ jobs:
         run: |
             dart compile exe ${{ env.MAIN_LOCATION }} -o ${{ env.APP_NAME }}
             zip ${{ env.OUTPUT_PATH }} config.template.yml
-      - uses: softprops/action-gh-release@v1
+      - name: Upload artifact
+        uses: softprops/action-gh-release@v1
         with:
           path: ${{ env.OUTPUT_PATH }}
         env:
-          GITHUB_TOKEN: ${{ CI_CD }}
+          GITHUB_TOKEN: ${{ secrets.CI_CD }}
         
