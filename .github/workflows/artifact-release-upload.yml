@@ -27,7 +27,7 @@ jobs:
         run: |
             OUTPUT_PATH="${{ env.APP_NAME }}-${{ matrix.os }}.zip"
             dart compile exe ${{ env.MAIN_LOCATION }} -o ${{ env.APP_NAME }}
-            zip "$OUTPUT_PATH" config.template.yml
+            zip "$OUTPUT_PATH" config.template.yml README.md run.sh
       - name: Upload artifact
         uses: softprops/action-gh-release@v1
         with:
