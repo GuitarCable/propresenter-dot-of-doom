@@ -16,8 +16,6 @@ jobs:
       matrix:
         os: [macos-latest, macos-15-intel]
     runs-on: ${{ matrix.os }}
-    env:
-      OUTPUT_PATH: ${{ env.APP_NAME }}-${{ matrix.os }}.zip
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
