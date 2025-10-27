@@ -1,11 +1,12 @@
 name: Artifact Release Upload
 
-env:
-  APP_NAME: dot-of-doom
-  MAIN_LOCATION: bin/dart.dart
 on:
   release:
     types: [created]
+
+env:
+  APP_NAME: dot-of-doom
+  MAIN_LOCATION: bin/dart.dart
 
 jobs:
   build:
@@ -14,7 +15,7 @@ jobs:
         os: [macos-latest, macos-15-intel]
     runs-on: ${{ matrix.os }}
     env:
-      OUTPUT_PATH: ${{ APP_NAME }}-${{ matrix.os }}.zip
+      OUTPUT_PATH: ${{ env.APP_NAME }}-${{ matrix.os }}.zip
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
@@ -24,11 +25,11 @@ jobs:
         run: dart pub get
       - name: Compile and Zip
         run: |
-            dart compile exe ${{ MAIN_LOCATION }} -o $APP_NAME
-            zip ${{ OUTPUT_PATH }} config.template.yml
+            dart compile exe ${{ env.MAIN_LOCATION }} -o ${{ env.APP_NAME }}
+            zip ${{ env.OUTPUT_PATH }} config.template.yml
       - uses: softprops/action-gh-release@v1
         with:
-          path: ${{ OUTPUT_PATH }}
+          path: ${{ env.OUTPUT_PATH }}
         env:
           GITHUB_TOKEN: ${{ CI_CD }}
         
