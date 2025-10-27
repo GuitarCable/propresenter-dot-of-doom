@@ -18,5 +18,5 @@ If debug is false, texts will actually be sent (and logged).
 Follow instructions at https://developer.planning.center/docs/#/overview/authentication for generating a Personal Access Token
 <h3>To Run</h3>
 Run the run.sh via terminal or some trigger.<br>
-<span style="color:red;">Note: if running from a context outside of the folder where run.sh is, make sure that you specify the path where run.sh is</span>
+Note: if running from a context outside of the folder where run.sh is, make sure that you specify the path where run.sh is<br>
 Logs will go to logs/dot_of_doom.txt.
