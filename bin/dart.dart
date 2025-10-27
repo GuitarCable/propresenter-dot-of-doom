@@ -12,7 +12,7 @@ void main(List<String> arguments) async {
   String configFileContents = File('config.yml').readAsStringSync();
   var config = yaml.loadYaml(configFileContents);
 
-  PcoApi pcoApi = new PcoApi(
+  PcoApi pcoApi = PcoApi(
     config['oAuth']['clientId'],
     config['oAuth']['clientSecret'],
   );
@@ -57,7 +57,7 @@ void main(List<String> arguments) async {
     phoneNumbers.add(util.getPrimaryPhoneNumber(phoneNumberApiResponse));
   }
 
-  AppleScript appleScript = new AppleScript(logger, config['debug']);
+  AppleScript appleScript = AppleScript(logger, config['debug']);
 
   for (String phoneNumber in phoneNumbers) {
     try {
