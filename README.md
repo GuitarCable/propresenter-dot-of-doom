@@ -9,7 +9,7 @@ This will be<br>
 Unzip this into your target folder.
 <h3>Field Setup</h3>
 There should be a "config.template.yml".<br>
-Make a copy of this in the folder and fill out the various fields.<br>
+Make a copy of this in the folder named "config.yml" and fill out the various fields.<br>
 These should match existing service types/positions/teams that exist.<br>
 The message is arbitrary.<br>
 If debug is true, a log will be generated and texts will not be sent.<br>
