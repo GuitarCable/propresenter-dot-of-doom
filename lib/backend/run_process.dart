@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:yaml/yaml.dart' as yaml;
-import 'package:dart/apple_script/apple_script.dart';
-import 'package:dart/util/util.dart' as util;
-import 'package:dart/pco_api/pco_api.dart';
-import 'package:dart/logger/logger.dart' as log;
+import 'apple_script/apple_script.dart';
+import 'util/util.dart' as util;
+import 'pco_api/pco_api.dart';
+import 'logger/logger.dart' as log;
 import 'package:logging/logging.dart';
 
-void main(List<String> arguments) async {
+void run(var config) async {
   Logger logger = await log.getLogger();
   logger.info('initializing config');
   String configFileContents = File('config.yml').readAsStringSync();
