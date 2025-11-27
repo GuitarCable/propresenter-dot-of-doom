@@ -27,14 +27,14 @@ class PcoApi {
   }
 
   //@api.services.v2.service_types.get()
-  dynamic getService(String serviceTypeName) async {
-    return await get('services/v2/service_types?name=$serviceTypeName');
+  dynamic getServiceType(String serviceTypeName) async {
+    return await get('services/v2/service_types?where[name]=${Uri.encodeComponent(serviceTypeName)}');
   }
 
   //@api.services.v2.service_types[service_type_id].plans.get(order: '-created_at')
   dynamic getPlans(String serviceId) async {
     return await get(
-      'services/v2/service_types/$serviceId/plans?order=-created_at',
+      'services/v2/service_types/$serviceId/plans?order=-sort_date&include=plan_times',
     );
   }
 

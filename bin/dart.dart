@@ -10,21 +10,29 @@ void main(List<String> arguments) async {
   Logger logger = await log.getLogger();
   logger.info('initializing config');
   String configFileContents = File('config.yml').readAsStringSync();
-  var config = yaml.loadYaml(configFileContents);
+  var config = Map.from(yaml.loadYaml(configFileContents));
 
   PcoApi pcoApi = PcoApi(
     config['oAuth']['clientId'],
     config['oAuth']['clientSecret'],
   );
 
+  String serviceType;
+  logger.info(arguments);
+  if (arguments.isNotEmpty) {
+    serviceType = arguments.first;
+  } else {
+    serviceType = config['serviceType'];
+  }
+  logger.info(serviceType);
   //service_type_api_response = @api.services.v2.service_types.get('where[name]': @config.service_type)
-  var serviceTypeApiResponse = await pcoApi.getService(config['serviceType']);
+  var serviceTypeApiResponse = await pcoApi.getServiceType(serviceType);
   //service_type_id = service_type_api_response['data'][0]['id']
   String serviceTypeId = serviceTypeApiResponse['data'][0]['id'];
 
   var plans = await pcoApi.getPlans(serviceTypeId);
 
-  var currentPlan = util.getCurrentPlan(plans);
+  var currentPlan = util.getCurrentPlan(plans, config);
 
   // team = @api.services.v2.service_types[service_type_id].plans[current_plan['id']].team_members.get(per_page: '50')
   var teamApiResponse = await pcoApi.getAllTeamMembersForPlan(
@@ -43,14 +51,11 @@ void main(List<String> arguments) async {
 
       for (dynamic member in teamApiResponse['data']) {
         if (util.isConfirmed(member) && util.isInTeam(member, teamId)) {
-          // logger.info(member);
-          logger.info(member['attributes']['name']);
           tempPlayers[member['attributes']['name']] = member;
         }
       }
     }
     players.addAll(tempPlayers.values);
-    logger.info(players.length);
   } else {
     players.add(util.getPlayer(teamApiResponse, config['bandPosition']));
   }

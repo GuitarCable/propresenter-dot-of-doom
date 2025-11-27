@@ -27,14 +27,14 @@ class AppleScript {
       logger.info('running text in debug mode');
     } else {
       logger.info('running in prod mode');
-      final result = await Process.run('osascript', ['-e', appleScriptCode]);
-      if (result.exitCode == 0) {
-        logger.info('AppleScript executed successfully:');
-        logger.info(result.stdout);
-      } else {
-        logger.severe('Error executing AppleScript:');
-        logger.severe(result.stderr);
-      }
+      // final result = await Process.run('osascript', ['-e', appleScriptCode]);
+      // if (result.exitCode == 0) {
+      //   logger.info('AppleScript executed successfully:');
+      //   logger.info(result.stdout);
+      // } else {
+      //   logger.severe('Error executing AppleScript:');
+      //   logger.severe(result.stderr);
+      // }
     }
   }
 }
