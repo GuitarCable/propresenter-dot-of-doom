@@ -1,10 +1,22 @@
-dynamic getCurrentPlan(dynamic plans) {
+dynamic getCurrentPlan(dynamic plans, dynamic config) {
   DateTime now = DateTime.now();
-  final nextSunday = now.add(Duration(days: (7 - now.weekday) % 7));
 
   for (var plan in plans['data']) {
-    if (DateTime.parse(plan['attributes']['sort_date']).day == nextSunday.day) {
-      return plan;
+    if (plan['attributes']['service_time_count'] <= 0) {
+      continue;
+    }
+    var planDate = DateTime.parse(plan['attributes']['sort_date']);
+    print(planDate);
+    if (planDate.isAfter(now.subtract(Duration(days: 1))) & planDate.isBefore(now.add(Duration(days: 6)))) {
+      print(plan);
+      if (now.isAfter(DateTime.parse(plan['attributes']['sort_date']))
+        & now.isBefore(DateTime.parse(plan['attributes']['last_time_at']).add(Duration(hours: 1, minutes: 15)))) {
+        config['debug'] = false;
+        return plan;
+      } else {
+        config['debug'] = true;
+        return plan;
+      }
     }
   }
   throw Exception("No plan was found that matched current day");
