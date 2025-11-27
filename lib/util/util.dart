@@ -21,8 +21,8 @@ dynamic isConfirmed(dynamic person) {
 
 dynamic getPlayer(dynamic team, String position) {
   for (var person in team['data']) {
-    if (person['attributes']['team_position_name'].casecmp(position) == 0 &&
-        isConfirmed(person)) {
+    if (person['attributes']['team_position_name'].toString().toLowerCase() == position.toLowerCase()
+      && isConfirmed(person)) {
       return person;
     }
   }
@@ -37,9 +37,9 @@ dynamic isInTeam(dynamic person, String teamId) {
   }
 }
 
-String getTeamId(dynamic teamsApiResponse, String serviceTypeId) {
+String getTeamId(dynamic teamsApiResponse, String teamName, String serviceTypeId) {
   for (dynamic team in teamsApiResponse['data']) {
-    if (team['relationships']['service_type']['data']['id'] == serviceTypeId) {
+    if (team['relationships']['service_type']['data']['id'] == serviceTypeId && team['attributes']['name'] == teamName) {
       return team['id'];
     }
   }
