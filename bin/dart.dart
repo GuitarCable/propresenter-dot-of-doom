@@ -32,18 +32,25 @@ void main(List<String> arguments) async {
     currentPlan['id'],
   );
   List<dynamic> players = [];
+  Map<String, dynamic> tempPlayers = {};
 
   if (config['sendAll'] == true) {
     for (String teamName in config['teamNames']) {
+      logger.info("current team is: $teamName");
       dynamic teamsApiResponse = await pcoApi.getTeamsFromTeamName(teamName);
-      String teamId = util.getTeamId(teamsApiResponse, serviceTypeId);
+      String teamId = util.getTeamId(teamsApiResponse, teamName, serviceTypeId);
+      logger.info("Current teamId is $teamId");
 
       for (dynamic member in teamApiResponse['data']) {
         if (util.isConfirmed(member) && util.isInTeam(member, teamId)) {
-          players.add(member);
+          // logger.info(member);
+          logger.info(member['attributes']['name']);
+          tempPlayers[member['attributes']['name']] = member;
         }
       }
     }
+    players.addAll(tempPlayers.values);
+    logger.info(players.length);
   } else {
     players.add(util.getPlayer(teamApiResponse, config['bandPosition']));
   }
