@@ -6,15 +6,13 @@ dynamic getCurrentPlan(dynamic plans, dynamic config) {
       continue;
     }
     var planDate = DateTime.parse(plan['attributes']['sort_date']);
-    print(planDate);
-    if (planDate.isAfter(now.subtract(Duration(days: 1))) & planDate.isBefore(now.add(Duration(days: 6)))) {
-      print(plan);
+    if (planDate.isAfter(now.subtract(Duration(hours: 12))) & planDate.isBefore(now.add(Duration(days: 6)))) {
       if (now.isAfter(DateTime.parse(plan['attributes']['sort_date']))
         & now.isBefore(DateTime.parse(plan['attributes']['last_time_at']).add(Duration(hours: 1, minutes: 15)))) {
-        config['debug'] = false;
+        config.debug = false;
         return plan;
       } else {
-        config['debug'] = true;
+        config.debug = true;
         return plan;
       }
     }

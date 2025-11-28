@@ -22,19 +22,20 @@ class AppleScript {
 	      log "Message sent"
       end run
     ''';
-    logger.info("sending text to $phoneNumber");
     if (debug) {
       logger.info('running text in debug mode');
+      logger.info("\"sending text\" to $phoneNumber");
     } else {
       logger.info('running in prod mode');
-      // final result = await Process.run('osascript', ['-e', appleScriptCode]);
-      // if (result.exitCode == 0) {
-      //   logger.info('AppleScript executed successfully:');
-      //   logger.info(result.stdout);
-      // } else {
-      //   logger.severe('Error executing AppleScript:');
-      //   logger.severe(result.stderr);
-      // }
+      logger.info("sending text to $phoneNumber");
+      final result = await Process.run('osascript', ['-e', appleScriptCode]);
+      if (result.exitCode == 0) {
+        logger.info('AppleScript executed successfully:');
+        logger.info(result.stdout);
+      } else {
+        logger.severe('Error executing AppleScript:');
+        logger.severe(result.stderr);
+      }
     }
   }
 }
