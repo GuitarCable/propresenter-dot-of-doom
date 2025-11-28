@@ -11,16 +11,25 @@ class Config {
   String messageType;
   bool debug;
 
-  Config(this.oAuth, this.serviceType, this.bandPosition, this.teamNames, this.sendAll,
-  this.backupNumber, this.message, this.messageType, this.debug);
+  Config(
+    this.oAuth,
+    this.serviceType,
+    this.bandPosition,
+    this.teamNames,
+    this.sendAll,
+    this.backupNumber,
+    this.message,
+    this.messageType,
+    this.debug,
+  );
 
   static Config from(dynamic yamlMap) {
     final YamlList? teamNameYamlList = yamlMap['teamNames'] as YamlList?;
     List<String> teamNameList = [];
     if (teamNameYamlList != null) {
       teamNameList = teamNameYamlList.nodes
-        .map((node) => node.value.toString())
-        .toList();
+          .map((node) => node.value.toString())
+          .toList();
     }
     return Config(
       OAuth(yamlMap['oAuth']['clientId'], yamlMap['oAuth']['clientSecret']),
@@ -31,7 +40,7 @@ class Config {
       yamlMap['backupNumber'],
       yamlMap['message'],
       yamlMap['messageType'],
-      yamlMap['debug']
+      yamlMap['debug'],
     );
   }
 }

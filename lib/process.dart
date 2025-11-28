@@ -16,15 +16,14 @@ class Process {
     String configFileContents = File('config.yml').readAsStringSync();
     config = Config.from(yaml.loadYaml(configFileContents));
 
-    pcoApi = PcoApi(
-      config.oAuth.clientId,
-      config.oAuth.clientSecret,
-    );
+    pcoApi = PcoApi(config.oAuth.clientId, config.oAuth.clientSecret);
   }
 
   dynamic getServiceTypeId() async {
     //service_type_api_response = @api.services.v2.service_types.get('where[name]': @config.service_type)
-    var serviceTypeApiResponse = await pcoApi.getServiceType(config.serviceType);
+    var serviceTypeApiResponse = await pcoApi.getServiceType(
+      config.serviceType,
+    );
     //service_type_id = service_type_api_response['data'][0]['id']
     String serviceTypeId = serviceTypeApiResponse['data'][0]['id'];
     return serviceTypeId;
@@ -50,7 +49,11 @@ class Process {
       for (String teamName in config.teamNames) {
         logger.info("current team is: $teamName");
         dynamic teamsApiResponse = await pcoApi.getTeamsFromTeamName(teamName);
-        String teamId = util.getTeamId(teamsApiResponse, teamName, serviceTypeId);
+        String teamId = util.getTeamId(
+          teamsApiResponse,
+          teamName,
+          serviceTypeId,
+        );
         // logger.info("Current teamId is $teamId");
 
         for (dynamic member in teamApiResponse['data']) {

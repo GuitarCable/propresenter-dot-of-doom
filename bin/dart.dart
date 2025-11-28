@@ -14,8 +14,10 @@ void main(List<String> arguments) async {
 
   Process process = Process(configLocation, logger);
 
-  if(results['serviceType'] != null) {
-    logger.info("Running with overridden service type: ${results['serviceType']}");
+  if (results['serviceType'] != null) {
+    logger.info(
+      "Running with overridden service type: ${results['serviceType']}",
+    );
     process.config.serviceType = results['serviceType'];
   }
 

@@ -28,7 +28,9 @@ class PcoApi {
 
   //@api.services.v2.service_types.get()
   dynamic getServiceType(String serviceTypeName) async {
-    return await get('services/v2/service_types?where[name]=${Uri.encodeComponent(serviceTypeName)}');
+    return await get(
+      'services/v2/service_types?where[name]=${Uri.encodeComponent(serviceTypeName)}',
+    );
   }
 
   //@api.services.v2.service_types[service_type_id].plans.get(order: '-created_at')
@@ -55,6 +57,8 @@ class PcoApi {
 
   //@api.people.v2.people[player_id].phone_numbers.get()
   dynamic getPhoneNumbersFromPersonId(String personId) async {
-    return await get('people/v2/people/${Uri.encodeComponent(personId)}/phone_numbers');
+    return await get(
+      'people/v2/people/${Uri.encodeComponent(personId)}/phone_numbers',
+    );
   }
 }
