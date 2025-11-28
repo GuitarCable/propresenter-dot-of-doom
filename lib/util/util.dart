@@ -6,9 +6,14 @@ dynamic getCurrentPlan(dynamic plans, dynamic config) {
       continue;
     }
     var planDate = DateTime.parse(plan['attributes']['sort_date']);
-    if (planDate.isAfter(now.subtract(Duration(hours: 12))) & planDate.isBefore(now.add(Duration(days: 6)))) {
-      if (now.isAfter(DateTime.parse(plan['attributes']['sort_date']))
-        & now.isBefore(DateTime.parse(plan['attributes']['last_time_at']).add(Duration(hours: 1, minutes: 15)))) {
+    if (planDate.isAfter(now.subtract(Duration(hours: 12))) &
+        planDate.isBefore(now.add(Duration(days: 6)))) {
+      if (now.isAfter(DateTime.parse(plan['attributes']['sort_date'])) &
+          now.isBefore(
+            DateTime.parse(
+              plan['attributes']['last_time_at'],
+            ).add(Duration(hours: 1, minutes: 15)),
+          )) {
         config.debug = false;
         return plan;
       } else {
@@ -31,8 +36,9 @@ dynamic isConfirmed(dynamic person) {
 
 dynamic getPlayer(dynamic team, String position) {
   for (var person in team['data']) {
-    if (person['attributes']['team_position_name'].toString().toLowerCase() == position.toLowerCase()
-      && isConfirmed(person)) {
+    if (person['attributes']['team_position_name'].toString().toLowerCase() ==
+            position.toLowerCase() &&
+        isConfirmed(person)) {
       return person;
     }
   }
@@ -47,9 +53,14 @@ dynamic isInTeam(dynamic person, String teamId) {
   }
 }
 
-String getTeamId(dynamic teamsApiResponse, String teamName, String serviceTypeId) {
+String getTeamId(
+  dynamic teamsApiResponse,
+  String teamName,
+  String serviceTypeId,
+) {
   for (dynamic team in teamsApiResponse['data']) {
-    if (team['relationships']['service_type']['data']['id'] == serviceTypeId && team['attributes']['name'] == teamName) {
+    if (team['relationships']['service_type']['data']['id'] == serviceTypeId &&
+        team['attributes']['name'] == teamName) {
       return team['id'];
     }
   }
