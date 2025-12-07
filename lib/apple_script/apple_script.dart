@@ -1,14 +1,17 @@
-import 'dart:io';
-
+import 'package:dart/apple_script/system_runner.dart/system_runner.dart';
 import 'package:logging/logging.dart';
 
 class AppleScript {
   Logger logger;
   bool debug;
 
-  AppleScript(this.logger, this.debug);
+  late SystemRunner systemRunner;
 
-  void text(String phoneNumber, String message) async {
+  AppleScript(this.logger, this.debug) {
+    systemRunner = SystemRunner(logger);
+  }
+
+  Future<int> text(String phoneNumber, String message) async {
     String appleScriptCode =
         '''
       on run argv
@@ -25,17 +28,11 @@ class AppleScript {
     if (debug) {
       logger.info('running text in debug mode');
       logger.info("\"sending text\" to $phoneNumber");
+      return 0;
     } else {
       logger.info('running in prod mode');
       logger.info("sending text to $phoneNumber");
-      final result = await Process.run('osascript', ['-e', appleScriptCode]);
-      if (result.exitCode == 0) {
-        logger.info('AppleScript executed successfully:');
-        logger.info(result.stdout);
-      } else {
-        logger.severe('Error executing AppleScript:');
-        logger.severe(result.stderr);
-      }
+      return (await systemRunner.run(appleScriptCode));
     }
   }
 }

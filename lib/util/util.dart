@@ -1,23 +1,24 @@
 dynamic getCurrentPlan(dynamic plans, dynamic config) {
-  DateTime now = DateTime.now();
+  DateTime tempNow = DateTime.now().toLocal();
+  DateTime now = DateTime.utc(tempNow.year, tempNow.month, tempNow.day, tempNow.hour, tempNow.minute);
+
+  DateTime allowedStart = DateTime.now().subtract(Duration(hours: 12)).toLocal();
+  DateTime allowedEnd = DateTime.now().add(Duration(days: 6)).toLocal();
 
   for (var plan in plans['data']) {
     if (plan['attributes']['service_time_count'] <= 0) {
       continue;
     }
     var planDate = DateTime.parse(plan['attributes']['sort_date']);
-    if (planDate.isAfter(now.subtract(Duration(hours: 12))) &
-        planDate.isBefore(now.add(Duration(days: 6)))) {
-      if (now.isAfter(DateTime.parse(plan['attributes']['sort_date'])) &
-          now.isBefore(
-            DateTime.parse(
-              plan['attributes']['last_time_at'],
-            ).add(Duration(hours: 1, minutes: 15)),
-          )) {
-        config.debug = false;
+    if (planDate.isAfter(allowedStart) &&
+        planDate.isBefore(allowedEnd)) {
+      var lastTime = DateTime.parse(plan['attributes']['last_time_at']);
+      if (now.isAfter(planDate) &&
+          now.isBefore(lastTime)) {
+        config.suggestedDebug = false;
         return plan;
       } else {
-        config.debug = true;
+        config.suggestedDebug = true;
         return plan;
       }
     }

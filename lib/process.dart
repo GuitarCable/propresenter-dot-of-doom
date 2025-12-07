@@ -81,16 +81,30 @@ class Process {
     return phoneNumbers;
   }
 
-  void sendMessages(List<String> phoneNumbers) {
-    AppleScript appleScript = AppleScript(logger, config.debug);
+  void sendMessages(List<String> phoneNumbers) async {
+    AppleScript appleScript = AppleScript(logger, determineDebug());
 
     for (String phoneNumber in phoneNumbers) {
       try {
-        appleScript.text(phoneNumber, config.message);
+        await appleScript.text(phoneNumber, config.message);
       } catch (e) {
         logger.severe('failed to text $phoneNumber');
         logger.severe(e);
       }
+    }
+  }
+
+  bool determineDebug() {
+    switch (config.debug.toLowerCase()) {
+      case "true":
+        return true;
+      case "false":
+        return false;
+      case "auto":
+        logger.info("using suggested debug setting");
+        return config.suggestedDebug;
+      default:
+        return true;
     }
   }
 }

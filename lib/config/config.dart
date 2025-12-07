@@ -9,7 +9,9 @@ class Config {
   String backupNumber;
   String message;
   String messageType;
-  bool debug;
+  String debug;
+
+  bool suggestedDebug = true;
 
   Config(
     this.oAuth,
