@@ -14,6 +14,7 @@ These should match existing service types/positions/teams that exist.<br>
 The message is arbitrary.<br>
 If debug is true, a log will be generated and texts will not be sent.<br>
 If debug is false, texts will actually be sent (and logged).
+If debug is auto, texts will be sent if it is currently during a service time (recommended setting)
 <h3>For retrieving a clientId and clientSecret</h3>
 Follow instructions at https://developer.planning.center/docs/#/overview/authentication for generating a Personal Access Token
 <h3>To Run</h3>
