@@ -82,7 +82,7 @@ class Process {
   }
 
   void sendMessages(List<String> phoneNumbers) async {
-    AppleScript appleScript = AppleScript(logger, config.debug);
+    AppleScript appleScript = AppleScript(logger, determineDebug());
 
     for (String phoneNumber in phoneNumbers) {
       try {
@@ -91,6 +91,20 @@ class Process {
         logger.severe('failed to text $phoneNumber');
         logger.severe(e);
       }
+    }
+  }
+
+  bool determineDebug() {
+    switch (config.debug.toLowerCase()) {
+      case "true":
+        return true;
+      case "false":
+        return false;
+      case "auto":
+        logger.info("using suggested debug setting");
+        return config.suggestedDebug;
+      default:
+        return true;
     }
   }
 }

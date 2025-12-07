@@ -1,5 +1,6 @@
 dynamic getCurrentPlan(dynamic plans, dynamic config) {
-  DateTime now = DateTime.now().toLocal();
+  DateTime tempNow = DateTime.now().toLocal();
+  DateTime now = DateTime.utc(tempNow.year, tempNow.month, tempNow.day, tempNow.hour, tempNow.minute);
 
   DateTime allowedStart = DateTime.now().subtract(Duration(hours: 12)).toLocal();
   DateTime allowedEnd = DateTime.now().add(Duration(days: 6)).toLocal();
@@ -8,19 +9,16 @@ dynamic getCurrentPlan(dynamic plans, dynamic config) {
     if (plan['attributes']['service_time_count'] <= 0) {
       continue;
     }
-    var planDateTemp = DateTime.parse(plan['attributes']['sort_date']);
-    var planDate = DateTime.utc(planDateTemp.year, planDateTemp.month, planDateTemp.day, planDateTemp.hour + 6, planDateTemp.minute).toLocal();
+    var planDate = DateTime.parse(plan['attributes']['sort_date']);
     if (planDate.isAfter(allowedStart) &&
         planDate.isBefore(allowedEnd)) {
-      var lastTimeTemp = DateTime.parse(plan['attributes']['last_time_at']);
-      var lastTime = DateTime.utc(lastTimeTemp.year, lastTimeTemp.month, lastTimeTemp.day, lastTimeTemp.hour + 6, lastTimeTemp.minute).add(Duration(hours: 1, minutes: 15)).toLocal();
+      var lastTime = DateTime.parse(plan['attributes']['last_time_at']);
       if (now.isAfter(planDate) &&
           now.isBefore(lastTime)) {
-        print("this should be in prod mode");
-        config.debug = false;
+        config.suggestedDebug = false;
         return plan;
       } else {
-        config.debug = true;
+        config.suggestedDebug = true;
         return plan;
       }
     }
