@@ -81,12 +81,12 @@ class Process {
     return phoneNumbers;
   }
 
-  void sendMessages(List<String> phoneNumbers) {
+  void sendMessages(List<String> phoneNumbers) async {
     AppleScript appleScript = AppleScript(logger, config.debug);
 
     for (String phoneNumber in phoneNumbers) {
       try {
-        appleScript.text(phoneNumber, config.message);
+        await appleScript.text(phoneNumber, config.message);
       } catch (e) {
         logger.severe('failed to text $phoneNumber');
         logger.severe(e);
