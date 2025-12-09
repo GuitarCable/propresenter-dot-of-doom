@@ -39,7 +39,7 @@ class Config {
       yamlMap['bandPosition'],
       teamNameList,
       yamlMap['sendAll'],
-      yamlMap['backupNumber'],
+      yamlMap['backupNumber'].toString(),
       yamlMap['message'],
       yamlMap['messageType'],
       yamlMap['debug'],
