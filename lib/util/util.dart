@@ -12,7 +12,7 @@ dynamic getCurrentPlan(dynamic plans, dynamic config) {
     var planDate = DateTime.parse(plan['attributes']['sort_date']);
     if (planDate.isAfter(allowedStart) &&
         planDate.isBefore(allowedEnd)) {
-      var lastTime = DateTime.parse(plan['attributes']['last_time_at']);
+      var lastTime = DateTime.parse(plan['attributes']['last_time_at']).add(Duration(hours: 1, minutes: 15));
       if (now.isAfter(planDate) &&
           now.isBefore(lastTime)) {
         config.suggestedDebug = false;
