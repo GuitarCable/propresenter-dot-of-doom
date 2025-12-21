@@ -3,7 +3,9 @@ dynamic getCurrentPlan(dynamic plans, dynamic config) {
   DateTime now = DateTime.utc(tempNow.year, tempNow.month, tempNow.day, tempNow.hour, tempNow.minute);
 
   DateTime allowedStart = DateTime.now().subtract(Duration(hours: 12)).toLocal();
-  DateTime allowedEnd = DateTime.now().add(Duration(days: 1)).toLocal();
+  DateTime allowedEnd = DateTime.now().add(Duration(days: 6)).toLocal();
+
+  var possiblePlans = [];
 
   for (var plan in plans['data']) {
     if (plan['attributes']['service_time_count'] <= 0) {
@@ -12,16 +14,22 @@ dynamic getCurrentPlan(dynamic plans, dynamic config) {
     var planDate = DateTime.parse(plan['attributes']['sort_date']);
     if (planDate.isAfter(allowedStart) &&
         planDate.isBefore(allowedEnd)) {
+      possiblePlans.add(plan);
+    }
+  }
+
+  for (var plan in possiblePlans) {
+      var planDate = DateTime.parse(plan['attributes']['sort_date']);
       var lastTime = DateTime.parse(plan['attributes']['last_time_at']).add(Duration(hours: 1, minutes: 15));
       if (now.isAfter(planDate) &&
           now.isBefore(lastTime)) {
         config.suggestedDebug = false;
         return plan;
-      } else {
-        config.suggestedDebug = true;
-        return plan;
       }
-    }
+  }
+  if (possiblePlans.isNotEmpty) {
+    config.suggestedDebug = true;
+    return possiblePlans[possiblePlans.length - 1];
   }
   throw Exception("No plan was found that matched current day");
 }
