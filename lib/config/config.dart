@@ -42,7 +42,7 @@ class Config {
       yamlMap['backupNumber'].toString(),
       yamlMap['message'],
       yamlMap['messageType'],
-      yamlMap['debug'],
+      yamlMap['debug'].toString(),
     );
   }
 }

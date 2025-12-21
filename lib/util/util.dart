@@ -3,7 +3,7 @@ dynamic getCurrentPlan(dynamic plans, dynamic config) {
   DateTime now = DateTime.utc(tempNow.year, tempNow.month, tempNow.day, tempNow.hour, tempNow.minute);
 
   DateTime allowedStart = DateTime.now().subtract(Duration(hours: 12)).toLocal();
-  DateTime allowedEnd = DateTime.now().add(Duration(days: 6)).toLocal();
+  DateTime allowedEnd = DateTime.now().add(Duration(days: 1)).toLocal();
 
   for (var plan in plans['data']) {
     if (plan['attributes']['service_time_count'] <= 0) {
