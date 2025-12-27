@@ -83,12 +83,12 @@ class Process {
     return phoneNumbers;
   }
 
-  void sendMessages(List<String> phoneNumbers) async {
+  void sendMessages(List<String> phoneNumbers) {
     AppleScript appleScript = AppleScript(logger, determineDebug());
 
     for (String phoneNumber in phoneNumbers) {
       try {
-        await appleScript.text(phoneNumber, config.message);
+        appleScript.text(phoneNumber, config.message);
       } catch (e) {
         logger.severe('failed to text $phoneNumber');
         logger.severe(e);
@@ -96,23 +96,23 @@ class Process {
     }
   }
 
-  void sendFailureText() async {
+  void sendFailureText() {
     AppleScript appleScript = AppleScript(logger, true);
 
     try {
-      await appleScript.text(config.backupPhoneNumber, "Process failed. Check the logs");
+      appleScript.text(config.backupPhoneNumber, "Process failed. Check the logs");
     } catch (e) {
       logger.severe('failed to text ${config.backupPhoneNumber}');
       logger.severe(e);
     }
   }
 
-  void sendFailureEmails() async {
+  void sendFailureEmails() {
     AppleScript appleScript = AppleScript(logger, true);
 
     for (String email in config.failureLogEmails) {
       try {
-        await appleScript.email(email, logWrapper.getLogDump());
+        appleScript.email(email, logWrapper.getLogDump());
       } catch (e) {
         logger.severe('failed to email $email');
         logger.severe(e);
