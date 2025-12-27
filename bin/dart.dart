@@ -13,17 +13,22 @@ void main(List<String> arguments) async {
   Logger logger = await log.getLogger();
 
   Process process = Process(configLocation, logger);
+  
+  try {
+    if (results['serviceType'] != null) {
+      logger.info(
+        "Running with overridden service type: ${results['serviceType']}",
+      );
+      process.config.serviceType = results['serviceType'];
+    }
 
-  if (results['serviceType'] != null) {
-    logger.info(
-      "Running with overridden service type: ${results['serviceType']}",
-    );
-    process.config.serviceType = results['serviceType'];
+    String serviceTypeId = await process.getServiceTypeId();
+    var currentPlan = await process.getCurrentPlan(serviceTypeId);
+    var players = await process.getPlayers(serviceTypeId, currentPlan['id']);
+    List<String> phoneNumbers = await process.getPhoneNumbers(players);
+    process.sendMessages(phoneNumbers);
+  } catch (e) {
+    await process.sendFailureText();
+    await process.sendFailureEmails();
   }
-
-  String serviceTypeId = await process.getServiceTypeId();
-  var currentPlan = await process.getCurrentPlan(serviceTypeId);
-  var players = await process.getPlayers(serviceTypeId, currentPlan['id']);
-  List<String> phoneNumbers = await process.getPhoneNumbers(players);
-  process.sendMessages(phoneNumbers);
 }
