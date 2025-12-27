@@ -1,6 +1,6 @@
 import 'package:args/args.dart';
 import 'package:dart/process.dart';
-import 'package:dart/logger/logger.dart' as log;
+import 'package:dart/logger/logger.dart';
 import 'package:logging/logging.dart';
 
 const String configLocation = 'config.yml';
