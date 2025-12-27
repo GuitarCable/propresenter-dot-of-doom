@@ -94,6 +94,19 @@ class Process {
     }
   }
 
+  void sendFailureEmails(List<String> emails) async {
+    AppleScript appleScript = AppleScript(logger, true);
+
+    for (String email in emails) {
+      try {
+        await appleScript.email(email, logger.getLogDump());
+      } catch (e) {
+        logger.severe('failed to email $email');
+        logger.severe(e);
+      }
+    }
+  }
+
   bool determineDebug() {
     switch (config.debug.toLowerCase()) {
       case "true":
