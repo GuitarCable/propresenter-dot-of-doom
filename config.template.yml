@@ -8,7 +8,9 @@ teamNames:
  - team 2
 sendAll: false
 backupNumber: "(###) ###-####"
-failureLogEmail: email@domain.com
+failureLogEmails:
+ - email@domain.com
+ - email2@domain.com
 message: The dot is up.
 messageType: iMessage
 debug: true
