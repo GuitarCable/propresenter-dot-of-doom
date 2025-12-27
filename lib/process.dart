@@ -1,19 +1,17 @@
 import 'dart:io';
 import 'package:dart/apple_script/apple_script.dart';
-import 'package:logging/logging.dart';
+import 'package:logging/logger.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:dart/config/config.dart';
 import 'package:dart/pco_api/pco_api.dart';
 import 'package:dart/util/util.dart' as util;
 
 class Process {
-  LogWrapper logWrapper;
-  late Logger logger
+  Logger logger;
   late Config config;
   late PcoApi pcoApi;
 
-  Process(String configLocation, this.logWrapper) {
-    logger = logWrapper.logger;
+  Process(String configLocation, this.logger) {
     logger.info('initializing config');
     String configFileContents = File('config.yml').readAsStringSync();
     config = Config.from(yaml.loadYaml(configFileContents));
