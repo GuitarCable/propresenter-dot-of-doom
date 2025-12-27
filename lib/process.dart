@@ -8,11 +8,13 @@ import 'package:dart/util/util.dart' as util;
 
 class Process {
   LogWrapper logWrapper;
+  late Logger logger
   late Config config;
   late PcoApi pcoApi;
 
   Process(String configLocation, this.logWrapper) {
     logWrapper.log('initializing config', Level.info);
+    logger = logWrapper.logger;
     String configFileContents = File('config.yml').readAsStringSync();
     config = Config.from(yaml.loadYaml(configFileContents));
 
