@@ -12,7 +12,7 @@ class Process {
   late PcoApi pcoApi;
 
   Process(String configLocation, this.logWrapper) {
-    logger.info('initializing config');
+    logWrapper.log('initializing config', Level.info);
     String configFileContents = File('config.yml').readAsStringSync();
     config = Config.from(yaml.loadYaml(configFileContents));
 
@@ -82,7 +82,7 @@ class Process {
   }
 
   void sendMessages(List<String> phoneNumbers) async {
-    AppleScript appleScript = AppleScript(logWrapper, determineDebug());
+    AppleScript appleScript = AppleScript(logWrapper.logger, determineDebug());
 
     for (String phoneNumber in phoneNumbers) {
       try {
@@ -95,7 +95,7 @@ class Process {
   }
 
   void sendFailureText() async {
-    AppleScript appleScript = AppleScript(logWrapper, true);
+    AppleScript appleScript = AppleScript(logWrapper.logger, true);
 
     try {
       await appleScript.text(config.backupPhoneNumber, "Process failed. Check the logs");
@@ -106,7 +106,7 @@ class Process {
   }
 
   void sendFailureEmails() async {
-    AppleScript appleScript = AppleScript(logWrapper, true);
+    AppleScript appleScript = AppleScript(logWrapper.logger, true);
 
     for (String email in emails) {
       try {
