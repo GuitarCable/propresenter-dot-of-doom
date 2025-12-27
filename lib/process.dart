@@ -1,17 +1,20 @@
 import 'dart:io';
 import 'package:dart/apple_script/apple_script.dart';
-import 'package:logging/logging.dart';
+import 'package:logging/logger.dart';
+import 'package:logger/logger.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:dart/config/config.dart';
 import 'package:dart/pco_api/pco_api.dart';
 import 'package:dart/util/util.dart' as util;
 
 class Process {
-  Logger logger;
+  LogWrapper logWrapper;
+  late Logger logger;
   late Config config;
   late PcoApi pcoApi;
 
-  Process(String configLocation, this.logger) {
+  Process(String configLocation, this.logWrapper) {
+    logger = logWrapper.logger;
     logger.info('initializing config');
     String configFileContents = File('config.yml').readAsStringSync();
     config = Config.from(yaml.loadYaml(configFileContents));
@@ -81,14 +84,38 @@ class Process {
     return phoneNumbers;
   }
 
-  void sendMessages(List<String> phoneNumbers) async {
+  void sendMessages(List<String> phoneNumbers) {
     AppleScript appleScript = AppleScript(logger, determineDebug());
 
     for (String phoneNumber in phoneNumbers) {
       try {
-        await appleScript.text(phoneNumber, config.message);
+        appleScript.text(phoneNumber, config.message);
       } catch (e) {
         logger.severe('failed to text $phoneNumber');
+        logger.severe(e);
+      }
+    }
+  }
+
+  void sendFailureText() {
+    AppleScript appleScript = AppleScript(logger, true);
+
+    try {
+      appleScript.text(config.backupPhoneNumber, "Process failed. Check the logs");
+    } catch (e) {
+      logger.severe('failed to text ${config.backupPhoneNumber}');
+      logger.severe(e);
+    }
+  }
+
+  void sendFailureEmails() {
+    AppleScript appleScript = AppleScript(logger, true);
+
+    for (String email in config.failureLogEmails) {
+      try {
+        appleScript.email(email, logWrapper.getLogDump());
+      } catch (e) {
+        logger.severe('failed to email $email');
         logger.severe(e);
       }
     }

@@ -35,4 +35,26 @@ class AppleScript {
       return (await systemRunner.run(appleScriptCode));
     }
   }
+
+  Future<int> email(String email, String message) async {
+    String appleScriptCode =
+        '''
+		tell application "Mail"
+    		set theMessage to make new outgoing message with properties {subject:"Dot of Doom Error", content:"${message}", visible:false}
+    		tell theMessage
+        		make new to recipient with properties {name:"${email.split('@')}", address:"$email"}
+    		end tell
+    		send theMessage -- This line sends the email automatically
+		end tell
+    ''';
+    if (debug) {
+      logger.info('running email in debug mode');
+      logger.info("\"sending email\" to $phoneNumber");
+      return 0;
+    } else {
+      logger.info('running in prod mode');
+      logger.info("sending email to $phoneNumber");
+      return (await systemRunner.run(appleScriptCode));
+    }
+  }
 }

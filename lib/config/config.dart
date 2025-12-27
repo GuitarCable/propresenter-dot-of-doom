@@ -7,6 +7,7 @@ class Config {
   List<String> teamNames;
   bool sendAll;
   String backupNumber;
+  List<String> failureLogEmails;
   String message;
   String messageType;
   String debug;
@@ -20,6 +21,7 @@ class Config {
     this.teamNames,
     this.sendAll,
     this.backupNumber,
+    this.failureLogEmails,
     this.message,
     this.messageType,
     this.debug,
@@ -33,6 +35,13 @@ class Config {
           .map((node) => node.value.toString())
           .toList();
     }
+    final YamlList? failureLogEmails = yamlMap['failureLogEmails'] as YamlList?;
+    failureLogEmailList = [];
+    if (failureLogEmails != null) {
+      failureLogEmailList = failureLogEmails.nodes
+          .map((node) => node.value.toString())
+          .toList();
+    }
     return Config(
       OAuth(yamlMap['oAuth']['clientId'], yamlMap['oAuth']['clientSecret']),
       yamlMap['serviceType'],
@@ -40,6 +49,7 @@ class Config {
       teamNameList,
       yamlMap['sendAll'],
       yamlMap['backupNumber'].toString(),
+      failureLogEmails,
       yamlMap['message'],
       yamlMap['messageType'],
       yamlMap['debug'].toString(),
