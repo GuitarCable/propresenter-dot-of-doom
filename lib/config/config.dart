@@ -7,6 +7,7 @@ class Config {
   List<String> teamNames;
   bool sendAll;
   String backupNumber;
+  String failureLogEmail;
   String message;
   String messageType;
   String debug;
@@ -20,6 +21,7 @@ class Config {
     this.teamNames,
     this.sendAll,
     this.backupNumber,
+    this.failureLogEmail,
     this.message,
     this.messageType,
     this.debug,
@@ -40,6 +42,7 @@ class Config {
       teamNameList,
       yamlMap['sendAll'],
       yamlMap['backupNumber'].toString(),
+      yamlMap['failureLogEmail'],
       yamlMap['message'],
       yamlMap['messageType'],
       yamlMap['debug'].toString(),
