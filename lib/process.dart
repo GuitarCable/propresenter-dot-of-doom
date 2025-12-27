@@ -110,7 +110,7 @@ class Process {
   void sendFailureEmails() async {
     AppleScript appleScript = AppleScript(logWrapper.logger, true);
 
-    for (String email in emails) {
+    for (String email in config.failureLogEmails) {
       try {
         await appleScript.email(email, logWrapper.getLogDump());
       } catch (e) {
