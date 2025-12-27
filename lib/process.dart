@@ -94,7 +94,18 @@ class Process {
     }
   }
 
-  void sendFailureEmails(List<String> emails) async {
+  void sendFailureText() async {
+    AppleScript appleScript = AppleScript(logger, true);
+
+    try {
+      await appleScript.text(config.backupPhoneNumber, "Process failed. Check the logs");
+    } catch (e) {
+      logger.severe('failed to text ${config.backupPhoneNumber}');
+      logger.severe(e);
+    }
+  }
+
+  void sendFailureEmails() async {
     AppleScript appleScript = AppleScript(logger, true);
 
     for (String email in emails) {
