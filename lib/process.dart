@@ -7,11 +7,11 @@ import 'package:dart/pco_api/pco_api.dart';
 import 'package:dart/util/util.dart' as util;
 
 class Process {
-  Logger logger;
+  LogWrapper logWrapper;
   late Config config;
   late PcoApi pcoApi;
 
-  Process(String configLocation, this.logger) {
+  Process(String configLocation, this.logWrapper) {
     logger.info('initializing config');
     String configFileContents = File('config.yml').readAsStringSync();
     config = Config.from(yaml.loadYaml(configFileContents));
@@ -47,7 +47,7 @@ class Process {
 
     if (config.sendAll == true) {
       for (String teamName in config.teamNames) {
-        logger.info("current team is: $teamName");
+        logWrapper.log("current team is: $teamName", Level.info);
         dynamic teamsApiResponse = await pcoApi.getTeamsFromTeamName(teamName);
         String teamId = util.getTeamId(
           teamsApiResponse,
@@ -82,7 +82,7 @@ class Process {
   }
 
   void sendMessages(List<String> phoneNumbers) async {
-    AppleScript appleScript = AppleScript(logger, determineDebug());
+    AppleScript appleScript = AppleScript(logWrapper, determineDebug());
 
     for (String phoneNumber in phoneNumbers) {
       try {
@@ -95,7 +95,7 @@ class Process {
   }
 
   void sendFailureText() async {
-    AppleScript appleScript = AppleScript(logger, true);
+    AppleScript appleScript = AppleScript(logWrapper, true);
 
     try {
       await appleScript.text(config.backupPhoneNumber, "Process failed. Check the logs");
@@ -106,11 +106,11 @@ class Process {
   }
 
   void sendFailureEmails() async {
-    AppleScript appleScript = AppleScript(logger, true);
+    AppleScript appleScript = AppleScript(logWrapper, true);
 
     for (String email in emails) {
       try {
-        await appleScript.email(email, logger.getLogDump());
+        await appleScript.email(email, logWrapper.getLogDump());
       } catch (e) {
         logger.severe('failed to email $email');
         logger.severe(e);
