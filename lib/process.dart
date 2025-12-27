@@ -13,8 +13,8 @@ class Process {
   late PcoApi pcoApi;
 
   Process(String configLocation, this.logWrapper) {
-    logWrapper.log('initializing config', Level.info);
     logger = logWrapper.logger;
+    logger.info('initializing config');
     String configFileContents = File('config.yml').readAsStringSync();
     config = Config.from(yaml.loadYaml(configFileContents));
 
@@ -49,7 +49,7 @@ class Process {
 
     if (config.sendAll == true) {
       for (String teamName in config.teamNames) {
-        logWrapper.log("current team is: $teamName", Level.info);
+        logger.info("current team is: $teamName");
         dynamic teamsApiResponse = await pcoApi.getTeamsFromTeamName(teamName);
         String teamId = util.getTeamId(
           teamsApiResponse,
@@ -84,7 +84,7 @@ class Process {
   }
 
   void sendMessages(List<String> phoneNumbers) async {
-    AppleScript appleScript = AppleScript(logWrapper.logger, determineDebug());
+    AppleScript appleScript = AppleScript(logger, determineDebug());
 
     for (String phoneNumber in phoneNumbers) {
       try {
@@ -97,7 +97,7 @@ class Process {
   }
 
   void sendFailureText() async {
-    AppleScript appleScript = AppleScript(logWrapper.logger, true);
+    AppleScript appleScript = AppleScript(logger, true);
 
     try {
       await appleScript.text(config.backupPhoneNumber, "Process failed. Check the logs");
@@ -108,7 +108,7 @@ class Process {
   }
 
   void sendFailureEmails() async {
-    AppleScript appleScript = AppleScript(logWrapper.logger, true);
+    AppleScript appleScript = AppleScript(logger, true);
 
     for (String email in config.failureLogEmails) {
       try {
