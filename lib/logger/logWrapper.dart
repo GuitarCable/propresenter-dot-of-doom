@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:logging/logging.dart';
 
 class LogWrapper {
-  late Future<Logger> logger;
+  late Logger logger;
   late String fullLog;
 
   LogWrapper() {
     this.fullLog = "";
-    this.logger = getLogger(fullLog);
+    this.logger = await getLogger(fullLog);
   }
   Future<void> setupLoggingPath(String filePath) async {
     // Extract the directory path from the file path
