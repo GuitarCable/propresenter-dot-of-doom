@@ -36,7 +36,7 @@ class Config {
           .toList();
     }
     final YamlList? failureLogEmails = yamlMap['failureLogEmails'] as YamlList?;
-    failureLogEmailList = [];
+    List<String> failureLogEmailList = [];
     if (failureLogEmails != null) {
       failureLogEmailList = failureLogEmails.nodes
           .map((node) => node.value.toString())
