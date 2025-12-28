@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:dart/apple_script/apple_script.dart';
 import 'package:logging/logging.dart';
-import 'package:dart/logger/logger.dart';
+import 'package:dart/logger/logWrapper.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:dart/config/config.dart';
 import 'package:dart/pco_api/pco_api.dart';
