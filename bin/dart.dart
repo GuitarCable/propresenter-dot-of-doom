@@ -26,7 +26,10 @@ void main(List<String> arguments) async {
     var currentPlan = await process.getCurrentPlan(serviceTypeId);
     var players = await process.getPlayers(serviceTypeId, currentPlan['id']);
     List<String> phoneNumbers = await process.getPhoneNumbers(players);
-    process.sendMessages(phoneNumbers);
+    int returnCode = await process.sendMessages(phoneNumbers);
+		if (returnCode != 0) {
+			throw Exception("something in texting failed);
+		}
   } catch (e) {
     await process.sendFailureText();
     await process.sendFailureEmails();
