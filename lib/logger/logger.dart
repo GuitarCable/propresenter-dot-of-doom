@@ -3,7 +3,7 @@ import 'package:logging/logging.dart';
 
 class LogWrapper {
   late Future<Logger> logger;
-  String fullLog;
+  late String fullLog;
 
   LogWrapper() {
     this.fullLog = "";
