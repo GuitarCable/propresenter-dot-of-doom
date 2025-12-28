@@ -12,7 +12,7 @@ void main(List<String> arguments) async {
 
   LogWrapper logWrapper = LogWrapper();
 	while (logWrapper.logger == null) {}
-	logger = logWrapper.logger;
+	Logger logger = logWrapper.logger;
 
   Process process = Process(configLocation, logWrapper);
   
