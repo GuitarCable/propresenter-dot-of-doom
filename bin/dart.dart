@@ -11,6 +11,7 @@ void main(List<String> arguments) async {
   var results = parser.parse(arguments);
 
   LogWrapper logWrapper = await LogWrapper();
+	Logger logger = logWrapper.logger;
 
   Process process = Process(configLocation, logWrapper);
   
@@ -28,7 +29,7 @@ void main(List<String> arguments) async {
     List<String> phoneNumbers = await process.getPhoneNumbers(players);
     int returnCode = await process.sendMessages(phoneNumbers);
 		if (returnCode != 0) {
-			throw Exception("something in texting failed);
+			throw Exception("something in texting failed");
 		}
   } catch (e) {
     await process.sendFailureText();
