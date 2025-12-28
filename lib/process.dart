@@ -14,7 +14,6 @@ class Process {
   late PcoApi pcoApi;
 
   Process(String configLocation, this.logWrapper) {
-    logger = await logWrapper.logger;
     logger.info('initializing config');
     String configFileContents = File('config.yml').readAsStringSync();
     config = Config.from(yaml.loadYaml(configFileContents));
