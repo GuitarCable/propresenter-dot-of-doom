@@ -10,9 +10,9 @@ void main(List<String> arguments) async {
   parser.addOption('serviceType', help: 'Service type to run app for');
   var results = parser.parse(arguments);
 
-  LogWrapper logWrapper = LogWrapper()
+  LogWrapper logWrapper = log.LogWrapper();
 	  
-    Logger logger = await log.getLogger(fullLog);
+    Logger logger = await log.getLogger(logWrapper.fullLog);
 	  
 	logWrapper.logger = logger;
 
