@@ -5,9 +5,9 @@ class LogWrapper {
   Logger logger;
   String fullLog;
 
-  LogWrapper() async {
+  LogWrapper() {
     this.fullLog = "";
-    this.logger = await getLogger(fullLog);
+    this.logger = getLogger(fullLog);
   }
   Future<void> setupLoggingPath(String filePath) async {
     // Extract the directory path from the file path
