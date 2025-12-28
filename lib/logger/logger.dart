@@ -49,26 +49,7 @@ class LogWrapper {
     return logger;
   }
 
-  log(String message, Level level) {
-    switch (level) {
-      case Level.debug:
-        logger.debug(message);
-        break;
-      case Level.info:
-        logger.info(message);
-        break;
-      case Level.warning:
-        logger.warning(message);
-        break;
-      case Level.severe:
-        logger.severe(message);
-        break;
-      default:
-        throw Exception("unknown log level detected: $level");
-    }
-  }
-
-  getLogDump() {
+  String getLogDump() {
     return fullLog;
   }
 }
