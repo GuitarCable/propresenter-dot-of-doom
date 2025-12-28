@@ -11,7 +11,7 @@ void main(List<String> arguments) async {
   var results = parser.parse(arguments);
 
   LogWrapper logWrapper = LogWrapper();
-	await logWrapper.logger.exists();
+	logger = await logWrapper.logger;
 
   Process process = Process(configLocation, logWrapper);
   
