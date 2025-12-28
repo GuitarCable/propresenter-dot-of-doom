@@ -49,11 +49,11 @@ class AppleScript {
     ''';
     if (debug) {
       logger.info('running email in debug mode');
-      logger.info("\"sending email\" to $phoneNumber");
+      logger.info("\"sending email\" to $email");
       return 0;
     } else {
       logger.info('running in prod mode');
-      logger.info("sending email to $phoneNumber");
+      logger.info("sending email to $email");
       return (await systemRunner.run(appleScriptCode));
     }
   }
