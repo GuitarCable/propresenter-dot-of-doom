@@ -49,7 +49,7 @@ class Config {
       teamNameList,
       yamlMap['sendAll'],
       yamlMap['backupNumber'].toString(),
-      failureLogEmails,
+      failureLogEmailList,
       yamlMap['message'],
       yamlMap['messageType'],
       yamlMap['debug'].toString(),
