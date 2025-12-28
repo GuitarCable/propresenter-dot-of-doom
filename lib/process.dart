@@ -84,41 +84,53 @@ class Process {
     return phoneNumbers;
   }
 
-  void sendMessages(List<String> phoneNumbers) {
+  Future<int> sendMessages(List<String> phoneNumbers) async {
     AppleScript appleScript = AppleScript(logger, determineDebug());
 
+		int returnCode = 0; 
     for (String phoneNumber in phoneNumbers) {
       try {
-        appleScript.text(phoneNumber, config.message);
+        await appleScript.text(phoneNumber, config.message);
       } catch (e) {
         logger.severe('failed to text $phoneNumber');
         logger.severe(e);
+				returnCode = 1;
       }
     }
+
+		return returnCode;
   }
 
-  void sendFailureText() {
+  Future<int> sendFailureText() async {
     AppleScript appleScript = AppleScript(logger, true);
 
+		int returnCode = 0;
     try {
-      appleScript.text(config.backupPhoneNumber, "Process failed. Check the logs");
+      await appleScript.text(config.backupPhoneNumber, "Process failed. Check the logs");
     } catch (e) {
       logger.severe('failed to text ${config.backupPhoneNumber}');
       logger.severe(e);
+			returnCode = 1;
     }
+
+		return returnCode;
   }
 
-  void sendFailureEmails() {
+  Future<int> sendFailureEmails() async {
     AppleScript appleScript = AppleScript(logger, true);
 
+		int returnCode = 0;
     for (String email in config.failureLogEmails) {
       try {
-        appleScript.email(email, logWrapper.getLogDump());
+        await appleScript.email(email, logWrapper.getLogDump());
       } catch (e) {
         logger.severe('failed to email $email');
         logger.severe(e);
+				returnCode = 1;
       }
     }
+
+		return returnCode;
   }
 
   bool determineDebug() {
