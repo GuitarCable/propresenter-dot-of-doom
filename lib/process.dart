@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:dart/apple_script/apple_script.dart';
-import 'package:logging/logger.dart';
-import 'package:logger/logger.dart';
+import 'package:logging/logging.dart';
+import 'package:dart/logger/logger.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:dart/config/config.dart';
 import 'package:dart/pco_api/pco_api.dart';
@@ -106,9 +106,9 @@ class Process {
 
 		int returnCode = 0;
     try {
-      await appleScript.text(config.backupPhoneNumber, "Process failed. Check the logs");
+      await appleScript.text(config.backupNumber, "Process failed. Check the logs");
     } catch (e) {
-      logger.severe('failed to text ${config.backupPhoneNumber}');
+      logger.severe('failed to text ${config.backupNumber}');
       logger.severe(e);
 			returnCode = 1;
     }
