@@ -1,6 +1,6 @@
 import 'package:args/args.dart';
 import 'package:dart/process.dart';
-import 'package:dart/logger/logWrapper.dart' as log;
+import 'package:dart/logger/logWrapper.dart';
 import 'package:logging/logging.dart';
 
 const String configLocation = 'config.yml';
@@ -10,9 +10,9 @@ void main(List<String> arguments) async {
   parser.addOption('serviceType', help: 'Service type to run app for');
   var results = parser.parse(arguments);
 
-  LogWrapper logWrapper = log.LogWrapper();
+  LogWrapper logWrapper = LogWrapper();
 	  
-    Logger logger = await log.getLogger(logWrapper.fullLog);
+    Logger logger = await getLogger(logWrapper.fullLog);
 	  
 	logWrapper.logger = logger;
 
