@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:logging/logging.dart';
 
 class LogWrapper {
-  late Logger? logger;
+  late Logger logger;
   late String fullLog;
 
   LogWrapper() {
