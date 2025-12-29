@@ -1,0 +1,40 @@
+on:
+  pull_request:
+    # Optional: specify types of events, e.g., 'opened', 'synchronize', 'reopened'
+    types: [opened, synchronize, reopened]
+
+env:
+  APP_NAME: dot-of-doom
+  MAIN_LOCATION: bin/dart.dart
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        os: [macos-latest, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 'stable'
+      - name: Install dependencies
+        run: dart pub get
+      - name: Compile and Zip
+        run: |
+            OUTPUT_PATH="${{ env.APP_NAME }}-${{ matrix.os }}.zip"
+            dart compile exe ${{ env.MAIN_LOCATION }} -o ${{ env.APP_NAME }}
+            zip "$OUTPUT_PATH" "${{ env.APP_NAME }}" config.template.yml README.md run.sh
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-build-artifact-${{ github.event.pull_request.number }} # Unique name for the artifact
+          path: |
+            ${{ env.APP_NAME }}-${{ matrix.os }}.zip # The path to your build output directory or files
+          retention-days: 5 # How long to keep the artifact
+        env:
+          GITHUB_TOKEN: ${{ secrets.CI_CD }}

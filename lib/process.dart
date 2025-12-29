@@ -1,17 +1,20 @@
 import 'dart:io';
 import 'package:dart/apple_script/apple_script.dart';
 import 'package:logging/logging.dart';
+import 'package:dart/logger/logWrapper.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:dart/config/config.dart';
 import 'package:dart/pco_api/pco_api.dart';
 import 'package:dart/util/util.dart' as util;
 
 class Process {
-  Logger logger;
+  LogWrapper logWrapper;
+  late Logger logger;
   late Config config;
   late PcoApi pcoApi;
 
-  Process(String configLocation, this.logger) {
+  Process(String configLocation, this.logWrapper) {
+	  logger = logWrapper.logger;
     logger.info('initializing config');
     String configFileContents = File('config.yml').readAsStringSync();
     config = Config.from(yaml.loadYaml(configFileContents));
@@ -81,17 +84,53 @@ class Process {
     return phoneNumbers;
   }
 
-  void sendMessages(List<String> phoneNumbers) async {
+  Future<int> sendMessages(List<String> phoneNumbers) async {
     AppleScript appleScript = AppleScript(logger, determineDebug());
 
+		int returnCode = 0; 
     for (String phoneNumber in phoneNumbers) {
       try {
         await appleScript.text(phoneNumber, config.message);
       } catch (e) {
         logger.severe('failed to text $phoneNumber');
         logger.severe(e);
+				returnCode = 1;
       }
     }
+
+		return returnCode;
+  }
+
+  Future<int> sendFailureText() async {
+    AppleScript appleScript = AppleScript(logger, true);
+
+		int returnCode = 0;
+    try {
+      await appleScript.text(config.backupNumber, "Process failed. Check the logs");
+    } catch (e) {
+      logger.severe('failed to text ${config.backupNumber}');
+      logger.severe(e);
+			returnCode = 1;
+    }
+
+		return returnCode;
+  }
+
+  Future<int> sendFailureEmails() async {
+    AppleScript appleScript = AppleScript(logger, true);
+
+		int returnCode = 0;
+    for (String email in config.failureLogEmails) {
+      try {
+        await appleScript.email(email, logWrapper.getLogDump());
+      } catch (e) {
+        logger.severe('failed to email $email');
+        logger.severe(e);
+				returnCode = 1;
+      }
+    }
+
+		return returnCode;
   }
 
   bool determineDebug() {

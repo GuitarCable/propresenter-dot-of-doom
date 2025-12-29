@@ -1,6 +1,19 @@
 import 'dart:io';
 import 'package:logging/logging.dart';
 
+class LogWrapper {
+  late Logger logger;
+  late String fullLog;
+
+  LogWrapper() {
+    this.fullLog = "";
+  }
+
+  String getLogDump() {
+    return fullLog;
+  }
+}
+
 Future<void> setupLoggingPath(String filePath) async {
   // Extract the directory path from the file path
   String directoryPath = filePath.substring(0, filePath.lastIndexOf('/'));
@@ -24,18 +37,19 @@ Future<void> setupLoggingPath(String filePath) async {
   }
 }
 
-Future<Logger> getLogger() async {
-  Logger.root.level = Level.ALL;
-  String loggingFilePath = './logs/dot_of_doom.txt';
-  await setupLoggingPath(loggingFilePath);
-  Logger.root.onRecord.listen((record) {
-    final message =
-        '${record.time} | ${record.level.name} | ${record.loggerName} | ${record.message}';
-    print(message);
-    final logFile = File(loggingFilePath);
-    logFile.writeAsStringSync('$message\n', mode: FileMode.append);
-  });
-  final logger = Logger('Dot of Doom');
+Future<Logger> getLogger(String fullLog) async {
+    Logger.root.level = Level.ALL;
+    String loggingFilePath = './logs/dot_of_doom.txt';
+    await setupLoggingPath(loggingFilePath);
+    Logger.root.onRecord.listen((record) {
+      final message =
+          '${record.time} | ${record.level.name} | ${record.loggerName} | ${record.message}';
+      fullLog += message + '\n';
+      print(message);
+      final logFile = File(loggingFilePath);
+      logFile.writeAsStringSync('$message\n', mode: FileMode.append);
+    });
+    final logger = Logger('Dot of Doom');
 
-  return logger;
-}
+    return logger;
+  }

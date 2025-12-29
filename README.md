@@ -11,6 +11,8 @@ Unzip this into your target folder.
 There should be a "config.template.yml".<br>
 Make a copy of this in the folder named "config.yml" and fill out the various fields.<br>
 These should match existing service types/positions/teams that exist.<br>
+The "backupNumber" field will send a text to the number specified if something during the PCO api calls fail.
+The "failureLogEmails" field allows specification of emails to send a full log dump to in case of error to better enable troubleshooting.
 The message is arbitrary.<br>
 If debug is true, a log will be generated and texts will not be sent.<br>
 If debug is false, texts will actually be sent (and logged).
